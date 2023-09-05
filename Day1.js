@@ -1,36 +1,109 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { verbData } from './verbs';
 
+const ITEMS_PER_PAGE = 5;
+
 const Day1 = ({ navigation }) => {
-  // You can initialize the currentVerbIndex state to 0 to start with the first verb.
-  const [currentVerbIndex, setCurrentVerbIndex] = React.useState(0);
-  const currentVerb = verbData[currentVerbIndex];
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const visibleVerbs = verbData.slice(startIndex, endIndex);
 
   const handleNext = () => {
-    // Increment the currentVerbIndex when the "Next" button is tapped.
-    if (currentVerbIndex < verbData.length - 1) {
-      setCurrentVerbIndex(currentVerbIndex + 1);
+    if (endIndex < verbData.length) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
-  const gradientColors = ['#ff9800', '#ff5722']; // Define your gradient colors here
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const gradientColors = ['#ff9800', '#ff5722'];
 
   return (
     <LinearGradient
-      colors={gradientColors}
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+    colors={['#0093E9', '#80D0C7']} 
+      style={{ flex: 1 }}
     >
-      <Text style={{ color: '#fff' }}>Verb: {currentVerb.verb}</Text>
-      <Text style={{ color: '#fff' }}>Base: {currentVerb.base}</Text>
-      <Text style={{ color: '#fff' }}>Past Simple: {currentVerb.pastSimple}</Text>
-      <Text style={{ color: '#fff' }}>Past Participle: {currentVerb.pastParticiple}</Text>
-      <Text style={{ color: '#fff' }}>Present Participle: {currentVerb.presentParticiple}</Text>
-      <Text style={{ color: '#fff' }}>Telugu: {currentVerb.telugu.base}</Text>
-      <Button title="Next" onPress={handleNext} />
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Present</Text>
+          <Text style={styles.headerText}>Past Simple</Text>
+          <Text style={styles.headerText}>Past Participle</Text>
+          <Text style={styles.headerText}>Present Participle</Text>
+          <Text style={styles.headerText}>Telugu</Text>
+        </View>
+        {visibleVerbs.map((currentVerb, index) => (
+          <View key={index} style={styles.dataRow}>
+            <Text style={styles.dataText}>{currentVerb.base}</Text>
+            <Text style={styles.dataText}>{currentVerb.pastSimple}</Text>
+            <Text style={styles.dataText}>{currentVerb.pastParticiple}</Text>
+            <Text style={styles.dataText}>{currentVerb.presentParticiple}</Text>
+            <Text style={styles.dataText}>{currentVerb.telugu.base}</Text>
+          </View>
+        ))}
+      </ScrollView>
+      <View style={styles.pagination}>
+        <Button title="Previous" onPress={handlePrevious} disabled={currentPage === 1} />
+        <Text style={styles.pageText}></Text>
+        <Button
+          title="Next"
+          onPress={handleNext}
+          disabled={endIndex >= verbData.length}
+        />
+      </View>
     </LinearGradient>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'transparent', // Set the background to transparent
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    width: '100%',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    paddingBottom: 5,
+  },
+  headerText: {
+    fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
+    color:'white'
+  },
+  dataRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 5,
+    borderTopWidth: 1,
+    borderColor: 'gray',
+  },
+  dataText: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  pageText: {
+    fontWeight: 'bold',
+  },
+});
 
 export default Day1;

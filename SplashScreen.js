@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   cursor: {
-    fontSize: 32,
+    fontSize: 52,
     color: 'white',
   },
   startButton: {

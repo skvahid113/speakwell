@@ -51,19 +51,19 @@ export const verbData = [
         presentParticiple: 'నడకుతున్నాడు',
       },
     },
-    {
-      verb: 'Jump',
-      base: 'jump',
-      pastSimple: 'jumped',
-      pastParticiple: 'jumped',
-      presentParticiple: 'jumping',
-      telugu: {
-        base: 'దెంగు',
-        pastSimple: 'దెగుతుంది',
-        pastParticiple: 'దెగుతుంది',
-        presentParticiple: 'దెంగుతున్నాడు',
-      },
-    },
+    // {
+    //   verb: 'Jump',
+    //   base: 'jump',
+    //   pastSimple: 'jumped',
+    //   pastParticiple: 'jumped',
+    //   presentParticiple: 'jumping',
+    //   telugu: {
+    //     base: 'దెంగు',
+    //     pastSimple: 'దెగుతుంది',
+    //     pastParticiple: 'దెగుతుంది',
+    //     presentParticiple: 'దెంగుతున్నాడు',
+    //   },
+    // },
     {
       verb: 'Sing',
       base: 'sing',

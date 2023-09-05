@@ -1,14 +1,21 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import Day1 from './Day1'; // Import your Day1 screen component
+import React from 'react';
+import { createAppContainer } from 'react-navigation';
+import { createSwipeNavigator } from 'react-navigation-swipe';
+import Day1 from './Day1';
+import PresentDoForms from './PresentDoForms';
+import PastDoForms from './PastDoForms';
+import FutureDoForms from './FutureDoForms';
 
-const Stack = createStackNavigator();
-
-const AppNavigator = () => (
-  <Stack.Navigator>
-    {/* Define your screens here */}
-    <Stack.Screen name="Day1" component={Day1} />
-    {/* Add other screens as needed */}
-  </Stack.Navigator>
+const AppNavigator = createSwipeNavigator(
+  {
+    Day1: Day1,
+    Present: PresentDoForms,
+    Past: PastDoForms,
+    Future: FutureDoForms,
+  },
+  {
+    initialRouteName: 'Day1', // Set the initial screen here
+  }
 );
 
-export default AppNavigator;
+export default createAppContainer(AppNavigator);
