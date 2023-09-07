@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const TypingText = ({ text, delay }) => {
   const [animatedText, setAnimatedText] = useState('');
@@ -33,6 +36,10 @@ const TypingText = ({ text, delay }) => {
 };
 
 const FutureDoForms = () => {
+  const navigation = useNavigation();
+  const navigate1 = () => {
+    navigation.navigate('PastDoForms'); // Assuming 'Day2' is the name of the 'Day2' screen in your navigation stack
+  };
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
       <Text style={styles.title}>Future ‘Do’ Forms:</Text>
@@ -43,6 +50,11 @@ const FutureDoForms = () => {
         <TypingText text="నువ్వు రేఫు తినవా? - Won't you eat tomorrow?" delay={7000} />
         <TypingText text="నువ్వు రేఫు ఎ౦దుకు తి౦టావు? - Why will you eat tomorrow?" delay={9000} />
         <TypingText text="నువ్వు రేఫు ఎ౦దుకు తినవు? - Why won't you eat tomorrow?" delay={11000} />
+      </View>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={navigate1}>
+          <FontAwesome5 name="arrow-left" size={36} color="orange" />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -70,6 +82,14 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     marginTop: 20,
     color: 'white',
+  },
+  backButtonContainer: {
+    borderRadius: 50, // Make it a circle
+    backgroundColor: 'black', // Semi-transparent white
+    padding: 10, // Adjust the size as needed
+  },
+  backButton: {
+    alignSelf: 'center', // Center the icon horizontally within the container
   },
 });
 

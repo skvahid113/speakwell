@@ -37,7 +37,7 @@ const Day5 = ({ navigation }) => {
 
   return (
     <LinearGradient
-      colors={['#88d3ce', '#6e45e2']}
+    colors={['#0093E9', '#80D0C7']} 
       style={styles.container}
     >
       <View style={styles.container}>

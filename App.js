@@ -41,6 +41,33 @@ import FutureContinuousTenseScreen from './FutureContinuousTenseScreen';
 import FuturePerfectTenseScreen from './FuturePerfectTenseScreen';
 import FuturePerfectContinuousTenseScreen from './FuturePerfectContinuousTenseScreen';
 
+import Day7 from './Day7';
+import Day8 from './Day8';
+import Day11 from './Day11';
+import Day12 from './Day12';
+import Day13 from './Day13';
+import Day14 from './Day14';
+import Day15 from './Day15';
+
+
+import can from './can';
+import could from './could';
+import will from './will';
+import would from './would';
+import shall from './shall';
+import should from './should';
+import may from './may';
+import might from './might';
+import must from './must';
+import usedto from './usedto';
+import oughtto from './oughtto';
+import needto from './needto';
+import dareto from './dareto';
+import ModalAuxiliaries from './ModalAuxiliaries';
+
+import CustomSidebar from './CustomSideBar';
+
+
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
@@ -63,7 +90,11 @@ const App = () => {
       > */}
       <ScreenWithGradientBackground>
 
-        <Drawer.Navigator >
+        <Drawer.Navigator
+          drawerContent={(props) => <CustomSidebar {...props} />
+
+          } // Use CustomSidebar as the contentComponent
+        >
           <Drawer.Screen
             name="SplashScreen"
             component={SplashScreen}
@@ -283,6 +314,23 @@ const App = () => {
           />
 
           <Drawer.Screen
+            name="Day7"
+            component={Day7}
+            options={({ navigation }) => ({
+              title: 'Day 7',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
             name="PastSimpleTenseScreen"
             component={PastSimpleTenseScreen}
             options={{ title: 'Past Simple Tense' }}
@@ -307,6 +355,23 @@ const App = () => {
           />
 
           <Drawer.Screen
+            name="Day8"
+            component={Day8}
+            options={({ navigation }) => ({
+              title: 'Day 8',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
             name="FutureSimpleTenseScreen"
             component={FutureSimpleTenseScreen}
             options={{ title: 'Future Simple Tense' }}
@@ -330,7 +395,183 @@ const App = () => {
             options={{ title: 'Future Perfect Continuous Tense' }}
           />
 
+          {/* Day11 */}
 
+          <Drawer.Screen
+            name="Day11"
+            component={Day11}
+            options={({ navigation }) => ({
+              title: 'Day 11',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
+            name="ModalAuxiliaries"
+            component={ModalAuxiliaries}
+            options={{ title: 'ModalAuxiliaries' }}
+          />
+          <Drawer.Screen
+            name="Can"
+            component={can}
+            options={{ title: 'Can' }}
+          />
+
+          <Drawer.Screen
+            name="Could"
+            component={could}
+            options={{ title: 'Could' }}
+          />
+
+
+
+          {/* day 12 */}
+
+          <Drawer.Screen
+            name="Day12"
+            component={Day12}
+            options={({ navigation }) => ({
+              title: 'Day 12',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
+            name="Will"
+            component={will}
+            options={{ title: 'Will' }}
+          />
+
+          <Drawer.Screen
+            name="Would"
+            component={would}
+            options={{ title: 'Would' }}
+          />
+          {/* day13 */}
+          <Drawer.Screen
+            name="Day13"
+            component={Day13}
+            options={({ navigation }) => ({
+              title: 'Day 13',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
+            name="Shall"
+            component={shall}
+            options={{ title: 'Shall' }}
+          />
+
+          <Drawer.Screen
+            name="Should"
+            component={should}
+            options={{ title: 'Should' }}
+          />
+
+
+          {/* day14 */}
+          <Drawer.Screen
+            name="Day14"
+            component={Day14}
+            options={({ navigation }) => ({
+              title: 'Day 14',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
+            name="May"
+            component={may}
+            options={{ title: 'May' }}
+          />
+
+          <Drawer.Screen
+            name="Might"
+            component={might}
+            options={{ title: 'Might' }}
+          />
+
+          <Drawer.Screen
+            name="Must"
+            component={must}
+            options={{ title: 'Must' }}
+          />
+
+
+          {/* day15 */}
+          <Drawer.Screen
+            name="Day15"
+            component={Day15}
+            options={({ navigation }) => ({
+              title: 'Day 15',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                >
+                  <MaterialIcons name="menu" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Drawer.Screen
+            name="UsedTo"
+            component={usedto}
+            options={{ title: 'Used To' }}
+          />
+
+          <Drawer.Screen
+            name="OughtTo"
+            component={oughtto}
+            options={{ title: 'Ought To' }}
+          />
+
+          <Drawer.Screen
+            name="NeedTo"
+            component={needto}
+            options={{ title: 'Need To' }}
+          />
+
+          <Drawer.Screen
+            name="DareTo"
+            component={dareto}
+            options={{ title: 'Dare To' }}
+          />
 
         </Drawer.Navigator>
         {/* </LinearGradient> */}

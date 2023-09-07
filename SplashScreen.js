@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 const SplashScreen = () => {
   const [text, setText] = useState('');
-  const fullText = 'Speakwell';
+  const fullTexts = ['Speakwell']; // Array of texts to alternate
   const navigation = useNavigation(); // Get navigation object
-
   const cursorOpacity = new Animated.Value(0); // Initialize opacity value
-
 
   const handleStartPress = () => {
     navigation.navigate('HomeScreen'); // Navigate to HomeScreen
@@ -17,19 +15,21 @@ const SplashScreen = () => {
 
   const startTypingAnimation = () => {
     let currentIndex = 0;
+    let currentTextIndex = 0; // Index to track the current text in the array
 
     const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setText(fullText.slice(0, currentIndex));
+      if (currentIndex <= fullTexts[currentTextIndex].length) {
+        setText(fullTexts[currentTextIndex].slice(0, currentIndex));
         currentIndex++;
       } else {
         clearInterval(typingInterval);
         setTimeout(() => {
-          setText(fullText);
+          setText(fullTexts[currentTextIndex]);
           setTimeout(() => {
             setText(''); // Clear text after a delay
             setTimeout(() => {
-              startTypingAnimation(); // Restart typing animation
+              currentTextIndex = (currentTextIndex + 1) % fullTexts.length; // Switch to the next text
+              startTypingAnimation(); // Restart typing animation with the next text
             }, 1000); // Adjust the delay before restarting (1 second in this example)
           }, 1000); // Adjust the delay before clearing (1 second in this example)
         }, 1000); // Adjust the delay before showing the full text (1 second in this example)
@@ -55,19 +55,27 @@ const SplashScreen = () => {
     ).start();
   };
 
-
-
   useEffect(() => {
     startTypingAnimation();
   }, []);
 
   return (
     <LinearGradient
-      colors={['#000', '#333']} // Define your gradient colors here
+      colors={['#000000', '#3533cd']} // Define your gradient colors here
+      start={{ x: 0, y: 0 }} // Start at the top
+      end={{ x: 0, y: 1 }} // End at the bottom (90-degree angle)
       style={styles.container}
     >
       <View style={styles.welcomeText}>
-        <Text style={styles.welcomeText}>Welcome</Text>
+        <Text style={styles.welcomeText}>Welcome
+          {'\n'}
+        </Text>
+
+        <Image
+          source={require('./assets/lg1.gif')}
+          style={styles.gif}
+          resizeMode="contain" // Use 'contain' to fit the entire image within the container
+        />
       </View>
       <View style={styles.splashScreen}>
         <Text style={styles.header}>
@@ -75,18 +83,17 @@ const SplashScreen = () => {
           <Animated.Text style={[styles.cursor, { opacity: cursorOpacity }]}>|</Animated.Text>
         </Text>
         {/* Rounded button with gradient background */}
-
       </View>
-      <TouchableOpacity onPress={handleStartPress}>
+      <TouchableHighlight onPress={handleStartPress}>
         <LinearGradient
           colors={['#ff6600', '#ff3366']} // Define your button gradient colors here
           start={{ x: 0, y: 0 }} // Gradient start point (optional)
           end={{ x: 1, y: 1 }} // Gradient end point (optional)
           style={styles.startButton}
         >
-          <Text style={{ color: 'white' }}>Start</Text>
+          <Text style={{ color: 'white', fontSize: 20 }}>Start</Text>
         </LinearGradient>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </LinearGradient>
   );
 };
@@ -128,6 +135,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
     shadowOpacity: 1,
+  },
+  gif: {
+    width: 200,
+    height: 200,
+    margin: 0, // Ensure there's no margin
+    padding: 0, // Ensure there's no padding
   },
 });
 

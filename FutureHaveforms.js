@@ -9,19 +9,14 @@ const FutureHaveForms = () => {
       style={styles.container}
     >
       <Text style={styles.title}>Future ‘Have’ Forms:</Text>
-      <Text style={styles.text}>
-        నాకు రేపు కొంచెం పనుంది - I will have some work tomorrow
-        {'\n'}
-        నాకు రేపు ఏ పని లేదు - I won’t have any work tomorrow
-        {'\n'}
-        నీకు రేపు ఏమైనా పనుందా? - Will you have any work tomorrow?
-        {'\n'}
-        నీకు రేపు ఏ పని లేదా? - Won’t you have any work tomorrow?
-        {'\n'}
-        నీకు రేపు ఏ సమయంలో పనుంది? - At what time will you have work tomorrow?
-        {'\n'}
-        నీకు రేపు పనె౦దకు లేదు? - Why won’t you have work tomorrow?
-      </Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>నాకు రేపు కొంచెం పనుంది - I will have some work tomorrow</Text>
+        <Text style={styles.text}>నాకు రేపు ఏ పని లేదు - I won’t have any work tomorrow</Text>
+        <Text style={styles.text}>నీకు రేపు ఏమైనా పనుందా? - Will you have any work tomorrow?</Text>
+        <Text style={styles.text}>నీకు రేపు ఏ పని లేదా? - Won’t you have any work tomorrow?</Text>
+        <Text style={styles.text}>నీకు రేపు ఏ సమయంలో పనుంది? - At what time will you have work tomorrow?</Text>
+        <Text style={styles.text}>నీకు రేపు పనె౦దకు లేదు? - Why won’t you have work tomorrow?</Text>
+      </View>
     </LinearGradient>
   );
 };
@@ -35,15 +30,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     color: 'white',
+    textAlign: 'center',
+  },
+  textContainer: {
+    marginLeft: 20,
+    marginTop: 30,
   },
   text: {
     fontSize: 16,
-    marginVertical: 10,
-    marginHorizontal: 20,
+    lineHeight: 40,
     color: 'white',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-    padding: 10,
   },
 });
 

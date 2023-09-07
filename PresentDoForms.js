@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const TypingText = ({ text, delay }) => {
-  const [animatedText, setAnimatedText] = React.useState('');
-  const [lineIndex, setLineIndex] = React.useState(0);
+  const [animatedText, setAnimatedText] = useState('');
+  const [lineIndex, setLineIndex] = useState(0);
   const lines = text.split('\n');
   const currentLine = lines[lineIndex];
 
-  React.useEffect(() => {
+ 
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       if (animatedText.length < currentLine.length) {
         setAnimatedText(currentLine.substring(0, animatedText.length + 1));
@@ -23,7 +28,7 @@ const TypingText = ({ text, delay }) => {
     return () => clearTimeout(timer);
   }, [animatedText, currentLine, lineIndex]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Clear the animated text and reset when the component re-renders
     setAnimatedText('');
     setLineIndex(0);
@@ -33,6 +38,10 @@ const TypingText = ({ text, delay }) => {
 };
 
 const PresentDoForms = () => {
+  const navigation = useNavigation();
+  const navigateToDay2 = () => {
+    navigation.navigate('PastDoForms'); // Assuming 'Day2' is the name of the 'Day2' screen in your navigation stack
+  };
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
       <Text style={styles.title}>Present ‘Do’ Forms:</Text>
@@ -43,6 +52,11 @@ const PresentDoForms = () => {
         <TypingText text="నువ్వు ప్రతిరొజు తినవా? - don't you eat daily?" delay={7000} />
         <TypingText text="నువ్వు ప్రతిరొజు ఎ౦దుకు తి౦టావు? - why do you eat daily?" delay={9000} />
         <TypingText text="నువ్వు ప్రతిరొజు ఎ౦దుకు తినవు? - why don't you eat daily?" delay={11000} />
+      </View>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={navigateToDay2}>
+          <FontAwesome5 name="arrow-right" size={36} color="orange" />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -70,6 +84,14 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     marginTop: 20,
     color: 'white',
+  },
+  backButtonContainer: {
+    borderRadius: 50, // Make it a circle
+    backgroundColor: 'black', // Semi-transparent white
+    padding: 10, // Adjust the size as needed
+  },
+  backButton: {
+    alignSelf: 'center', // Center the icon horizontally within the container
   },
 });
 

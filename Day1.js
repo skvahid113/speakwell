@@ -28,7 +28,7 @@ const Day1 = ({ navigation }) => {
 
   return (
     <LinearGradient
-    colors={['#0093E9', '#80D0C7']} 
+      colors={['#0093E9', '#80D0C7']}
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
@@ -54,8 +54,10 @@ const Day1 = ({ navigation }) => {
         <Text style={styles.pageText}></Text>
         <Button
           title="Next"
+          color={'orange'}
           onPress={handleNext}
           disabled={endIndex >= verbData.length}
+          style={styles.roundedButton}
         />
       </View>
     </LinearGradient>
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     width: '100%',
+
   },
   header: {
     flexDirection: 'row',
@@ -81,18 +84,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
-    color:'white'
+    color: 'white'
   },
   dataRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 5,
-    borderTopWidth: 1,
+    paddingTop: 25,
+    borderTopWidth: 2,
     borderColor: 'gray',
   },
   dataText: {
     flex: 1,
     textAlign: 'center',
+
   },
   pagination: {
     flexDirection: 'row',
@@ -100,9 +104,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     paddingHorizontal: 20,
+    marginBottom: 10,
   },
   pageText: {
     fontWeight: 'bold',
+    backgroundColor: 'red'
+
+  },
+  roundedButton: {
+    borderTopLeftRadius: 40, // Adjust the radius as needed
+    borderTopRightRadius: 40, // Adjust the radius as needed
   },
 });
 

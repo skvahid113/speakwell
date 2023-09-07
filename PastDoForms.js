@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const TypingText = ({ text, delay }) => {
   const [animatedText, setAnimatedText] = useState('');
@@ -33,6 +36,14 @@ const TypingText = ({ text, delay }) => {
 };
 
 const PastDoForms = () => {
+  const navigation = useNavigation();
+  const navigate1 = () => {
+    navigation.navigate('PresentDoForms'); // Assuming 'Day2' is the name of the 'Day2' screen in your navigation stack
+  };
+
+  const navigate2 = () => {
+    navigation.navigate('FutureDoForms'); // Assuming 'Day2' is the name of the 'Day2' screen in your navigation stack
+  };
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
       <Text style={styles.title}>Past ‘Do’ Forms:</Text>
@@ -43,6 +54,15 @@ const PastDoForms = () => {
         <TypingText text="నువ్వు నిన్న తినలేదా? - didn't you eat yesterday?" delay={7000} />
         <TypingText text="నువ్వు నిన్న ఎ౦దుకు తిన్నావు? - why did you eat yesterday?" delay={9000} />
         <TypingText text="నువ్వు నిన్న ఎ౦దుకు తినలేదు? - why didn't you eat yesterday?" delay={11000} />
+      </View>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={navigate1}>
+          <FontAwesome5 name="arrow-left" size={36} color="orange" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.backButton} onPress={navigate2}>
+          <FontAwesome5 name="arrow-right" size={36} color="orange" />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -70,6 +90,18 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     marginTop: 20,
     color: 'white',
+  },
+  backButtonContainer: {
+    borderRadius: 50, // Make it a circle
+    backgroundColor: 'black', // Semi-transparent white
+    padding: 10, // Adjust the size as needed
+    flexDirection: 'row', // Arrange buttons horizontally
+    justifyContent: 'space-between', // Add space between buttons
+    width: '100%', // Make the container span the full width
+    paddingHorizontal: 20, // Add horizontal padding for spacing
+  },
+  backButton: {
+    alignSelf: 'center', // Center the icon horizontally within the container
   },
 });
 

@@ -75,7 +75,7 @@ const Day2 = () => {
                     style={styles.gradientText}
                 >
                     <Text style={styles.title}>
-                        Mastering Prepositions: A Guide to Using Them Correctly
+                        Mastering Prepositions: A Guide to Use Them Correctly
                     </Text>
                 </LinearGradient>
                 <View style={{ flex: 1, justifyContent: 'space-around' }}>
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontSize: 24,
+        color:'white'
     },
     separator: {
         borderBottomWidth: 1,
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginTop: 20, // Adjust the marginTop to control the space between title and content
+        
     },
     gradientText: {
         marginHorizontal: 20,

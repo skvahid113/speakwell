@@ -1,31 +1,42 @@
-// presentBeforms.js
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const PresentBeforms = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Present "be" forms</Text>
-      <Text>నేను స౦తోష౦గా ఉన్నాను - i am happy now</Text>
-      <Text>నేను స౦తోష౦గా లేను - i am not happy now</Text>
-      <Text>నువ్వు స౦తోష౦గా ఉన్నావా? - are you happy now?</Text>
-      <Text>నువ్వు స౦తోష౦గా లేవా? - aren't you happy now?</Text>
-      <Text>నువ్వు స౦తోష౦గా ఎ౦దుకు ఉన్నావు? - why are you happy now?</Text>
-      <Text>నువ్వు స౦తోష౦గా ఎ౦దుకు లేవు? - why aren't you happy now?</Text>
-    </View>
+    <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
+      <View>
+        <Text style={styles.title}>Present "be" forms</Text>
+        <Text style={styles.text}>నేను స౦తోష౦గా ఉన్నాను - I am happy now</Text>
+        <Text style={styles.text}>నేను స౦తోష౦గా లేను - I am not happy now</Text>
+        <Text style={styles.text}>నువ్వు స౦తోష౦గా ఉన్నావా? - Are you happy now?</Text>
+        <Text style={styles.text}>నువ్వు స౦తోష౦గా లేవా? - Aren't you happy now?</Text>
+        <Text style={styles.text}>నువ్వు స౦తోష౦గా ఎ౦దుకు ఉన్నావు? - Why are you happy now?</Text>
+        <Text style={styles.text}>నువ్వు స౦తోష౦గా ఎ౦దుకు లేవు? - Why aren't you happy now?</Text>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 20, // Add some top padding to push content to the top
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'white',
+    marginBottom: 50,
+
+  },
+  text: {
+    fontSize: 16,
+    color: 'white',
+    marginVertical: 5,
+    marginLeft:20,
+    lineHeight:40,
   },
 });
 
