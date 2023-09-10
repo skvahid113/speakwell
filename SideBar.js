@@ -8,7 +8,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 const SideBar = ({ navigation }) => {
   const [showSubmenus, setShowSubmenus] = useState(false);
 
-
   // Generate menu options for Day 1 to Day 30
   const menuOptions = [];
   for (let i = 1; i <= 30; i++) {
@@ -60,6 +59,12 @@ const SideBar = ({ navigation }) => {
                   console.log(`Selected: ${item.label}`);
                 }}
               >
+                <MaterialIcons
+                  name="event"
+                  size={24}
+                  color="white" // Color of the "Days" icon
+                  style={styles.icon}
+                />
                 <Text style={styles.menuOption}>{item.label}</Text>
               </TouchableOpacity>
             )}
@@ -85,24 +90,25 @@ const styles = StyleSheet.create({
   menuHeaderText: {
     fontSize: 26,
     marginLeft: 2,
-    color:'black'
+    color: 'black',
   },
   menu: {},
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-   
   },
   menuOption: {
-
     marginLeft: 20,
     fontSize: 28,
     borderBottomWidth: 2,
-    borderBottomColor: 'orange',
+    borderBottomColor: '#8e54e9',
     marginBottom: 5,
-    color:'white'
-    // Add more specific selector if needed
+    color: 'white',
+  },
+  icon: {
+    marginRight: 10, // Add spacing between icon and text
+    color: '#8e54e9'
   },
 });
 

@@ -1,53 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 const SplashScreen = () => {
   const [text, setText] = useState('');
-  const fullTexts = ['Speakwell']; // Array of texts to alternate
-  const navigation = useNavigation(); // Get navigation object
-  const cursorOpacity = new Animated.Value(0); // Initialize opacity value
+  const texts = ['Quick Lingo', 'Learn quickly','Speak well']; // Add the new text here
+  const colors = ['#f9d423', '#FF3366', '#33FF66']; // Corresponding colors for the texts
+  const navigation = useNavigation();
+  const cursorOpacity = new Animated.Value(0);
+  const textIndex = useRef(0);
 
   const handleStartPress = () => {
-    navigation.navigate('HomeScreen'); // Navigate to HomeScreen
+    navigation.navigate('HomeScreen');
   };
 
   const startTypingAnimation = () => {
     let currentIndex = 0;
-    let currentTextIndex = 0; // Index to track the current text in the array
 
     const typingInterval = setInterval(() => {
-      if (currentIndex <= fullTexts[currentTextIndex].length) {
-        setText(fullTexts[currentTextIndex].slice(0, currentIndex));
+      if (currentIndex <= texts[textIndex.current].length) {
+        setText(texts[textIndex.current].slice(0, currentIndex));
         currentIndex++;
       } else {
         clearInterval(typingInterval);
         setTimeout(() => {
-          setText(fullTexts[currentTextIndex]);
-          setTimeout(() => {
-            setText(''); // Clear text after a delay
-            setTimeout(() => {
-              currentTextIndex = (currentTextIndex + 1) % fullTexts.length; // Switch to the next text
-              startTypingAnimation(); // Restart typing animation with the next text
-            }, 1000); // Adjust the delay before restarting (1 second in this example)
-          }, 1000); // Adjust the delay before clearing (1 second in this example)
-        }, 1000); // Adjust the delay before showing the full text (1 second in this example)
+          setText('');
+          textIndex.current = (textIndex.current + 1) % texts.length;
+          startTypingAnimation();
+        }, 1000);
       }
-    }, 150); // Adjust the typing speed (in milliseconds) as needed
+    }, 150);
 
-    // Start cursor animation
     Animated.loop(
       Animated.sequence([
         Animated.timing(cursorOpacity, {
           toValue: 1,
-          duration: 500, // Blinking duration (500 milliseconds)
+          duration: 500,
           easing: Easing.linear,
           useNativeDriver: false,
         }),
         Animated.timing(cursorOpacity, {
           toValue: 0,
-          duration: 500, // Blinking duration (500 milliseconds)
+          duration: 500,
           easing: Easing.linear,
           useNativeDriver: false,
         }),
@@ -61,39 +56,35 @@ const SplashScreen = () => {
 
   return (
     <LinearGradient
-      colors={['#870000', '#3533cd']} // Define your gradient colors here
-      start={{ x: 0, y: 0 }} // Start at the top
-      end={{ x: 0, y: 1 }} // End at the bottom (90-degree angle)
+      colors={['#870000', '#3533cd']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
       style={styles.container}
     >
       <View style={styles.welcomeText}>
-        <Text style={styles.welcomeText}>Welcome
-          {'\n'}
-        </Text>
-
+        <Text style={styles.welcomeText}>Welcome{'\n'}</Text>
         <Image
           source={require('./assets/lg1.gif')}
           style={styles.gif}
-          resizeMode="contain" // Use 'contain' to fit the entire image within the container
+          resizeMode="stretch"
         />
       </View>
       <View style={styles.splashScreen}>
-        <Text style={styles.header}>
+        <Text style={[styles.header, { color: colors[textIndex.current] }]}>
           {text}
           <Animated.Text style={[styles.cursor, { opacity: cursorOpacity }]}>|</Animated.Text>
         </Text>
-        {/* Rounded button with gradient background */}
       </View>
-      <TouchableHighlight onPress={handleStartPress}>
+      <TouchableOpacity onPress={handleStartPress}>
         <LinearGradient
-          colors={['#ff6600', '#ff3366']} // Define your button gradient colors here
-          start={{ x: 0, y: 0 }} // Gradient start point (optional)
-          end={{ x: 1, y: 1 }} // Gradient end point (optional)
+          colors={colors} // Use the corresponding colors
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
           style={styles.startButton}
         >
           <Text style={{ color: 'white', fontSize: 20 }}>Start</Text>
         </LinearGradient>
-      </TouchableHighlight>
+      </TouchableOpacity>
     </LinearGradient>
   );
 };
@@ -118,7 +109,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 52,
     overflow: 'hidden',
-    color: 'red',
   },
   cursor: {
     fontSize: 52,
@@ -139,8 +129,8 @@ const styles = StyleSheet.create({
   gif: {
     width: 200,
     height: 200,
-    margin: 0, // Ensure there's no margin
-    padding: 0, // Ensure there's no padding
+    margin: 0,
+    padding: 0,
   },
 });
 
