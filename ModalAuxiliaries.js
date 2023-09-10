@@ -1,30 +1,35 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import TypingText from 'react-native-typing-animation'; // Import the typing animation component
 
 const ModalAuxiliaries = () => {
+  const [showTyping, setShowTyping] = useState(false);
+
+  useEffect(() => {
+    // Delay the start of the typing animation
+    setTimeout(() => {
+      setShowTyping(true);
+    }, 1000); // Adjust the delay as needed
+  }, []);
+
   return (
     <LinearGradient
-            colors={['#0093E9', '#80D0C7']}
-            style={{ flex: 1 }}
-        >
-    <View style={styles.container}>
-      <Text style={styles.title}>MODAL AUXILIARIES (13)</Text>
-      <Text>In the English language, there are 13 modal auxiliaries, and each modal auxiliary has its own importance:</Text>
-      <Text>1. గలను - can</Text>
-      <Text>2. గలిగాను - could</Text>
-      <Text>3. ఖచ్చిత౦గాచేస్తాను - will do</Text>
-      <Text>4. చేసేవాడిని/దానిని - would do</Text>
-      <Text>5. చేస్తాను - shall do</Text>
-      <Text>6. చేయాలి - should do</Text>
-      <Text>7. చేయవచ్చు - may do</Text>
-      <Text>8. చేసిఉ౦డవచ్చు - might do</Text>
-      <Text>9. చేసితీరాలి - must do</Text>
-      <Text>10. ఒకప్పుడుచేసేవాడిని - used to do</Text>
-      <Text>11. చేయవలసినభాధ్యతఉ౦ది - ought to do</Text>
-      <Text>12. చేయవలసినఅవసర౦ఉ౦ది - need/need to do</Text>
-      <Text>13. చేసేధైర్య౦ఉ౦ది - dare/dare to do</Text>
-    </View>
+      colors={['#0093E9', '#80D0C7']}
+      style={styles.container}
+    >
+      <View style={styles.content}>
+        <Text style={styles.title}>MODAL AUXILIARIES (13)</Text>
+        {showTyping ? (
+          <TypingText
+            text="In the English language, there are 13 modal auxiliaries, and each modal auxiliary has its own importance:"
+            textStyle={styles.text}
+          />
+        ) : null}
+        <Text style={styles.staticText}>
+          {/* Include your other static text components here */}
+        </Text>
+      </View>
     </LinearGradient>
   );
 };
@@ -32,12 +37,27 @@ const ModalAuxiliaries = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     padding: 20,
+  },
+  content: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 20,
+    borderRadius: 10,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: 'white',
+    textAlign: 'center',
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  staticText: {
+    color: 'white',
+    // Include styles for other static text components here
   },
 });
 

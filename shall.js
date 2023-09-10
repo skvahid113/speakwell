@@ -1,19 +1,24 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const ShallUsageComponent = () => {
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.header}>చేస్తాను (Shall Do)</Text>
-        <Text style={styles.example}>s + shall + v1 + c;</Text>
-        <Text style={styles.note}>
-          If the action is compulsory, we use 'shall' for he/she/it/you/they.
-        </Text>
-        <Text style={styles.note}>
-          If the action is doubtful, we use 'shall' for I/we.
-        </Text>
+        <Animatable.View animation="pulse" iterationCount="infinite">
+          <Text style={styles.rounded}>s + shall + v1 + c;
+            {'\n'}
+            {'\n'}
+
+            If the action is compulsory, we use 'shall' for he/she/it/you/they.
+            {'\n'}
+            {'\n'}
+            If the action is doubtful, we use 'shall' for I/we.</Text>
+        </Animatable.View>
+
         <Text style={styles.example}>Eg:-</Text>
 
         <View style={styles.exampleContainer}>
@@ -59,6 +64,14 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: 'white',
     marginVertical: 5,
+  },
+  rounded: {
+    fontSize: 20,
+    marginBottom: 10,
+    color: 'white',
+    backgroundColor: 'orange', // Background color with transparency
+    borderRadius: 20, // Border radius for rounded corners
+    padding: 10, // Add some padding
   },
 });
 

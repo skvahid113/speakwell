@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "speakwell",
-    "slug": "speakwell",
+    "name": "quicklingo",
+    "slug": "quicklingo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Q.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Q.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,14 +22,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.speakwell"
+      "package": "com.quicklingo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "67382eb3-9154-48b4-b2de-1c7fa6ae174c"
+        "projectId": "3a4b1eec-9a66-4e30-98ee-94ca92e7eae6"
       }
     }
   }

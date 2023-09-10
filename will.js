@@ -1,13 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Animatable from 'react-native-animatable';
 
 const WillUsageComponent = () => {
     return (
         <LinearGradient colors={['#0093E9', '#80D0C7']} style={{ flex: 1 }}>
             <View style={styles.container}>
                 <Text style={styles.header}>English Examples:</Text>
-                <Text style={styles.example}>
+
+                <Animatable.View animation="pulse" iterationCount="infinite">
+                <Text style={styles.rounded}>
                     S+will +v1+c;
                     {'\n'}
                     {'\n'}
@@ -20,6 +23,8 @@ const WillUsageComponent = () => {
                 <Text style={styles.example}>
                     2. Will you please suggest me how to prepare for semester-end exams?
                 </Text>
+                </Animatable.View>
+                
                 <Text style={styles.header}>Telugu Examples:</Text>
                 <View style={styles.exampleContainer}>
                     <Text style={styles.exampleText}>నేను ఖచ్ఛితంగా తింటాను - I will eat</Text>
@@ -58,6 +63,14 @@ const styles = StyleSheet.create({
         color: 'white',
         marginVertical: 5,
         lineHeight: 40
+    },
+    rounded: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'orange', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
     },
 
 });

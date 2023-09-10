@@ -3,6 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faBook, faCalendar } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHome, faBook, faCalendar);
 
 const CustomSidebar = (props) => {
   const menuItems = [
@@ -27,7 +31,7 @@ const CustomSidebar = (props) => {
   return (
     <DrawerContentScrollView {...props}>
       <LinearGradient
-        colors={['#16A085', '#F4D03F']}
+        colors={['#16A085', '#16A085']}
         style={styles.gradientContainer}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}

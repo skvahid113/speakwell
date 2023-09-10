@@ -61,7 +61,7 @@ const SplashScreen = () => {
 
   return (
     <LinearGradient
-      colors={['#000000', '#3533cd']} // Define your gradient colors here
+      colors={['#870000', '#3533cd']} // Define your gradient colors here
       start={{ x: 0, y: 0 }} // Start at the top
       end={{ x: 0, y: 1 }} // End at the bottom (90-degree angle)
       style={styles.container}

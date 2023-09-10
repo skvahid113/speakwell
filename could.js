@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const CouldUsageComponent = () => {
     return (
@@ -8,9 +9,19 @@ const CouldUsageComponent = () => {
             <View style={styles.container}>
                 <Text style={styles.header}>చేయ గలిగాను (Could Do)</Text>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.example}>S + could + v1 + c;</Text>
-                    <Text style={styles.example}>• It is the past form of ‘can’.</Text>
-                    <Text style={styles.example}>• It indicates past ability</Text>
+
+                    <Animatable.View animation="pulse" iterationCount="infinite">
+                        <Text style={styles.rounded}>S + could + v1 + c;
+                            {'\n'}
+                            {'\n'}
+                            • It is the past form of ‘can’.
+
+                            {'\n'}
+                            {'\n'}
+                            • It indicates past ability
+                        </Text>
+
+                    </Animatable.View>
                     <Text style={styles.example}>Eg:-</Text>
 
                     <View style={styles.contentLine}>
@@ -61,6 +72,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white',
         lineHeight: 40
+    },
+    rounded: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'orange', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
     },
 });
 

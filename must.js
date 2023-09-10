@@ -7,12 +7,31 @@ const MustUsageComponent = () => {
         <LinearGradient colors={['#0093E9', '#80D0C7']} style={{ flex: 1 }}>
             <View style={styles.container}>
                 <Text style={styles.header}>చేసి తీరాలి (Must Do)</Text>
-                <Text style={styles.example}>s + must + v1 + c;</Text>
-                <Text style={styles.note}>No doubt it is used to express commands/orders.</Text>
-                <Text style={styles.exampleText}>a) You must abide by my firm rules.</Text>
-                <Text style={styles.exampleText}>b) You mustn't go beyond your limits inspite of freshers day.</Text>
 
-                <Text style={styles.note}>Sometimes it does express expectations.</Text>
+                <Animatable.View animation="pulse" iterationCount="infinite">
+                    <Text style={styles.rounded}>S + must + v1 + c;
+                        {'\n'}
+                        {'\n'}
+
+                        No doubt it is used to express commands/orders.
+                        {'\n'}
+                        {'\n'}
+
+                        a) You must abide by my firm rules.
+                        {'\n'}
+                        {'\n'}
+
+                        b) You mustn't go beyond your limits inspite of freshers day.
+                    </Text>
+                </Animatable.View>
+
+
+                <Animatable.View animation="pulse" iterationCount="infinite">
+                    <Text style={styles.rounded1}>Sometimes it does express expectations.
+                    </Text>
+                </Animatable.View>
+                
+                
                 <Text style={styles.example}>Eg:</Text>
                 <Text style={styles.exampleText}>I think he must know the answer - నాకు తెలిసి అతనికి సమాదానం తెలుసు.</Text>
 
@@ -67,6 +86,22 @@ const styles = StyleSheet.create({
         color: 'white',
         marginVertical: 5,
 
+    },
+    rounded: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'orange', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
+    },
+    rounded1: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'blue', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
     },
 });
 

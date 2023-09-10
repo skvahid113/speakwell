@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const NeedToUsageComponent = () => {
   return (
@@ -57,6 +58,14 @@ const styles = StyleSheet.create({
     color: 'white',
     marginVertical: 5,
   },
+  rounded: {
+    fontSize: 20,
+    marginBottom: 10,
+    color: 'white',
+    backgroundColor: 'orange', // Background color with transparency
+    borderRadius: 20, // Border radius for rounded corners
+    padding: 10, // Add some padding
+},
 });
 
 export default NeedToUsageComponent;

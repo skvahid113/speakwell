@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const CanScreen = () => {
     return (
@@ -8,8 +9,14 @@ const CanScreen = () => {
             <View style={styles.container}>
                 <Text style={styles.title}>CAN DO (చేయ గలను)</Text>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.contentText}>S+can+v1+c;</Text>
-                    <Text style={styles.contentText}>• It indicates "present ability"</Text>
+                    <Animatable.View animation="pulse" iterationCount="infinite">
+                        <Text style={styles.rounded}>S+can+v1+c;
+                        {'\n'}
+                        {'\n'}
+                        • It indicates "present ability"</Text>
+                        
+                    </Animatable.View>
+
                     <Text style={styles.contentText}>Eg:-</Text>
                     <Text style={styles.contentText}>నేను తినగలను - I can eat</Text>
                     <Text style={styles.contentText}>నేను తినలేను - I can't eat</Text>
@@ -48,6 +55,14 @@ const styles = StyleSheet.create({
         color: 'white',
         lineHeight: 40,
 
+    },
+    rounded: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'orange', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
     },
 });
 

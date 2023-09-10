@@ -69,7 +69,7 @@ const Day2 = () => {
         >
             <View style={styles.container}>
                 <LinearGradient
-                    colors={['#FF5733', '#E53D00']}
+                    colors={['#0093E9', '#80D0C7']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={styles.gradientText}
@@ -117,7 +117,8 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontSize: 24,
-        color:'white'
+        color:'white',
+        marginTop:10
     },
     separator: {
         borderBottomWidth: 1,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
         marginTop: 20, // Adjust the marginTop to control the space between title and content

@@ -1,19 +1,28 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const MayUsageComponent = () => {
     return (
         <LinearGradient colors={['#0093E9', '#80D0C7']} style={{ flex: 1 }}>
             <View style={styles.container}>
                 <Text style={styles.header}>చేయ’వచ్చు (May Do)</Text>
-                <Text style={styles.example}>S + may + v1 + c;</Text>
-                <Text style={styles.note}>
-                    It is used to express "present possibility (or) future action".
-                </Text>
-                <Text style={styles.note}>
-                    It is also used to take permission (e.g., May I come in?).
-                </Text>
+
+                <Animatable.View animation="pulse" iterationCount="infinite">
+                    <Text style={styles.rounded}>S + may + v1 + c;
+                        {'\n'}
+                        {'\n'}
+
+                        It is used to express "present possibility (or) future action".
+                        {'\n'}
+                        {'\n'}
+
+                        It is also used to take permission (e.g., May I come in?).
+                    </Text>
+                </Animatable.View>
+
+
                 <Text style={styles.example}>Eg:-</Text>
 
                 <View style={styles.exampleContainer}>
@@ -62,6 +71,14 @@ const styles = StyleSheet.create({
         color: 'white',
         marginVertical: 5,
         lineHeight: 40
+    },
+    rounded: {
+        fontSize: 20,
+        marginBottom: 10,
+        color: 'white',
+        backgroundColor: 'orange', // Background color with transparency
+        borderRadius: 20, // Border radius for rounded corners
+        padding: 10, // Add some padding
     },
 });
 
