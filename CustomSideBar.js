@@ -31,7 +31,7 @@ const CustomSidebar = (props) => {
   return (
     <DrawerContentScrollView {...props}>
       <LinearGradient
-        colors={['#16A085', '#16A085']}
+        colors={['#c21500', '#d53369']}
         style={styles.gradientContainer}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginLeft: 10, // Add space between icon and text
   },
   icon: {
-    color: 'orange',
+    color: 'yellow',
     fontSize: 18, // Adjust as needed
   },
 });
