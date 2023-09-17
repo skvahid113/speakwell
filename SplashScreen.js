@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const SplashScreen = () => {
   const [text, setText] = useState('');
   const texts = ['Quick Lingo', 'Learn quickly','Speak well']; // Add the new text here
-  const colors = ['#f9d423', '#FF3366', '#33FF66']; // Corresponding colors for the texts
+  const colors = ['#f9d423', '#96c93d', '#33FF66']; // Corresponding colors for the texts
   const navigation = useNavigation();
   const cursorOpacity = new Animated.Value(0);
   const textIndex = useRef(0);

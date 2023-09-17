@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -11,7 +11,7 @@ const TypingText = ({ text, delay }) => {
   const lines = text.split('\n');
   const currentLine = lines[lineIndex];
 
- 
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,8 +42,16 @@ const PresentDoForms = () => {
   const navigateToDay2 = () => {
     navigation.navigate('PastDoForms'); // Assuming 'Day2' is the name of the 'Day2' screen in your navigation stack
   };
+
+  const navigateToQuiz = () => {
+    navigation.navigate('presentdoQuiz'); // Replace 'pdfquiz' with the actual name of your quiz screen
+  };
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
+      <ScrollView>
+      <TouchableOpacity style={styles.quizButton} onPress={navigateToQuiz}>
+        <Text style={styles.quizButtonText}>Take Quiz</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Present ‘Do’ Forms:</Text>
       <View style={styles.content}>
         <TypingText text="నేను ప్రతిరొజు తి౦టాను - I eat daily" delay={1000} />
@@ -58,6 +66,7 @@ const PresentDoForms = () => {
           <FontAwesome5 name="arrow-right" size={36} color="orange" />
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </LinearGradient>
   );
 };
@@ -92,6 +101,18 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: 'center', // Center the icon horizontally within the container
+  },
+
+  quizButton: {
+    borderRadius: 25,
+    backgroundColor: 'orange',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  quizButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

@@ -7,11 +7,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const SideBar = ({ navigation }) => {
   const [showSubmenus, setShowSubmenus] = useState(false);
+  const [lockedItem, setLockedItem] = useState(null); // Track the tapped locked item
 
   // Generate menu options for Day 1 to Day 30
   const menuOptions = [];
   for (let i = 1; i <= 30; i++) {
-    menuOptions.push({ label: `Day ${i}`, id: i });
+    menuOptions.push({ label: `Day ${i}`, id: i, locked: i >= 16 && i <= 30 }); // Lock items from Day 16 to Day 30
   }
 
   return (
@@ -44,28 +45,40 @@ const SideBar = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.menuItem}
                 onPress={() => {
-                  // Handle the menu item press here
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: 'Days',
-                          params: { id: item.id },
-                        },
-                      ],
-                    })
-                  );
-                  console.log(`Selected: ${item.label}`);
+                  // Check if the item is locked
+                  if (item.locked) {
+                    setLockedItem(item); // Store the tapped locked item
+                  } else {
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: 'Days',
+                            params: { id: item.id },
+                          },
+                        ],
+                      })
+                    );
+                    console.log(`Selected: ${item.label}`);
+                  }
                 }}
               >
                 <MaterialIcons
                   name="event"
                   size={24}
-                  color="white" // Color of the "Days" icon
+                  color={item.locked ? 'gray' : 'white'} // Color of the "Days" icon
                   style={styles.icon}
                 />
                 <Text style={styles.menuOption}>{item.label}</Text>
+                {item.locked && (
+                  <MaterialIcons
+                    name="lock"
+                    size={24}
+                    color={lockedItem === item ? 'white' : 'gray'} // Color of the lock icon
+                    style={styles.lockIcon}
+                  />
+                )}
               </TouchableOpacity>
             )}
           />
@@ -108,7 +121,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10, // Add spacing between icon and text
-    color: '#8e54e9'
+    color: '#8e54e9',
+  },
+  lockIcon: {
+    marginLeft: 10, // Add spacing between lock icon and text
   },
 });
 
