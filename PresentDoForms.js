@@ -44,7 +44,7 @@ const PresentDoForms = () => {
   };
 
   const navigateToQuiz = () => {
-    navigation.navigate('presentdoQuiz'); // Replace 'pdfquiz' with the actual name of your quiz screen
+    navigation.navigate('TakeNow'); // Replace 'pdfquiz' with the actual name of your quiz screen
   };
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>

@@ -66,7 +66,27 @@ import dareto from './dareto';
 import ModalAuxiliaries from './ModalAuxiliaries';
 
 import CustomSidebar from './CustomSideBar';
+import signup from './signup';
+import presentdoQuiz from './presentdoQuiz';
+import TakeNow from './TakeNow';
 
+
+// import firebase from 'firebase/app'; // Import the Firebase core module
+// import 'firebase/auth'; // Import other Firebase modules you might need
+
+// // Your Firebase configuration object (replace with your own config)
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyAEOIBzzB6f2rHZpIZ2jzofQQ5Zv2UlPPY',
+//   authDomain: 'YOUR_AUTH_DOMAIN',
+//   projectId: 'quicklingo-48466',
+//   storageBucket: 'quicklingo-48466.appspot.com',
+//   messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+//   appId: '1:26580527177:android:15cf8d9592b9da535eb798',
+// };
+// // Initialize Firebase
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// }
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -98,6 +118,23 @@ const App = () => {
           <Drawer.Screen
             name="SplashScreen"
             component={SplashScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Drawer.Screen
+            name="signup"
+            component={signup}
+            options={{ headerShown: false }}
+          />
+
+          <Drawer.Screen
+            name="TakeNow"
+            component={TakeNow}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name="presentdoQuiz"
+            component={presentdoQuiz}
             options={{ headerShown: false }}
           />
 

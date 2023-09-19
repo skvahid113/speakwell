@@ -1,18 +1,35 @@
-import React, { useEffect, useState,useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Easing,
+  TouchableOpacity,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 const SplashScreen = () => {
   const [text, setText] = useState('');
-  const texts = ['Quick Lingo', 'Learn quickly','Speak well']; // Add the new text here
-  const colors = ['#f9d423', '#96c93d', '#33FF66']; // Corresponding colors for the texts
+  const texts = ['Quick Lingo', 'Learn quickly', 'Speak well'];
+  const colors = ['#f9d423', '#96c93d', '#33FF66'];
   const navigation = useNavigation();
   const cursorOpacity = new Animated.Value(0);
   const textIndex = useRef(0);
 
-  const handleStartPress = () => {
-    navigation.navigate('HomeScreen');
+  const [showButtons, setShowButtons] = useState(true);
+
+  const handleSignUpPress = () => {
+    // Replace with your sign-up navigation logic
+    navigation.navigate('signup');
+  };
+
+  const handleLoginPress = () => {
+    // Replace with your login navigation logic
+    navigation.navigate('LoginScreen');
   };
 
   const startTypingAnimation = () => {
@@ -72,19 +89,37 @@ const SplashScreen = () => {
       <View style={styles.splashScreen}>
         <Text style={[styles.header, { color: colors[textIndex.current] }]}>
           {text}
-          <Animated.Text style={[styles.cursor, { opacity: cursorOpacity }]}>|</Animated.Text>
+          <Animated.Text style={[styles.cursor, { opacity: cursorOpacity }]}>
+            |
+          </Animated.Text>
         </Text>
       </View>
-      <TouchableOpacity onPress={handleStartPress}>
-        <LinearGradient
-          colors={colors} // Use the corresponding colors
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.startButton}
-        >
-          <Text style={{ color: 'white', fontSize: 20 }}>Start</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      {showButtons && (
+        <View style={styles.buttonContainer}>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity onPress={handleSignUpPress}>
+              <LinearGradient
+                colors={['#f9d423', '#96c93d']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleLoginPress}>
+              <LinearGradient
+                colors={['#f9d423', '#96c93d']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </LinearGradient>
   );
 };
@@ -114,17 +149,29 @@ const styles = StyleSheet.create({
     fontSize: 52,
     color: 'white',
   },
-  startButton: {
+  buttonContainer: {
     position: 'absolute',
-    bottom: 20,
+    top: 20,
     right: 20,
+  },
+  buttonGroup: {
+    flexDirection: 'row', // Arrange buttons horizontally
+  },
+  button: {
     borderRadius: 50,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginRight: 10, // Add spacing between buttons
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
     shadowOpacity: 1,
+    marginTop: 75,
+    marginRight: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
   gif: {
     width: 200,
