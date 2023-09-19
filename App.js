@@ -69,6 +69,7 @@ import CustomSidebar from './CustomSideBar';
 import signup from './signup';
 import presentdoQuiz from './presentdoQuiz';
 import TakeNow from './TakeNow';
+import presentdoQuiz2 from './presentdoQuiz2';
 
 
 // import firebase from 'firebase/app'; // Import the Firebase core module
@@ -135,6 +136,11 @@ const App = () => {
           <Drawer.Screen
             name="presentdoQuiz"
             component={presentdoQuiz}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name="presentdoQuiz2"
+            component={presentdoQuiz2}
             options={{ headerShown: false }}
           />
 
