@@ -43,16 +43,18 @@ const getRandomQuestions = (count) => {
     return shuffledQuestions.slice(0, count);
 };
 
-const QuizQuestion = ({ question, options, correctOption, onSelect, keySuffix }) => {
+const QuizQuestion = ({ question, options, correctOption, onSelect, isDisabled }) => {
     const [selectedOption, setSelectedOption] = useState(null);
 
-    useEffect(() => {
-        // Reset selected option when keySuffix changes (on retake)
-        setSelectedOption(null);
-    }, [keySuffix]);
+    const handleOptionSelect = (index) => {
+        if (!isDisabled) {
+            setSelectedOption(index);
+            onSelect(index === correctOption);
+        }
+    };
 
     return (
-        <View style={styles.questionContainer}>
+        <View style={[styles.questionContainer, isDisabled && styles.disabledQuestion]}>
             <Text style={styles.questionText}>{question}</Text>
             {options.map((option, index) => (
                 <TouchableOpacity
@@ -60,11 +62,10 @@ const QuizQuestion = ({ question, options, correctOption, onSelect, keySuffix })
                     style={[
                         styles.optionButton,
                         selectedOption === index && styles.selectedOption,
+                        isDisabled && styles.disabledOption, // Disable the option if the question is disabled
                     ]}
-                    onPress={() => {
-                        setSelectedOption(index);
-                        onSelect(index === correctOption);
-                    }}
+                    onPress={() => handleOptionSelect(index)}
+                    disabled={isDisabled} // Disable the option if the question is disabled
                 >
                     <Text style={styles.optionText}>{option}</Text>
                 </TouchableOpacity>
@@ -76,7 +77,7 @@ const QuizQuestion = ({ question, options, correctOption, onSelect, keySuffix })
 const PresentdoQuiz = () => {
     const [quizQuestions, setQuizQuestions] = useState([]);
     const [score, setScore] = useState(0);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [answeredQuestions, setAnsweredQuestions] = useState([]);
     const [quizFinished, setQuizFinished] = useState(false);
     const [showResultsModal, setShowResultsModal] = useState(false);
     const [resetKey, setResetKey] = useState(0); // Add a key for resetting questions
@@ -87,34 +88,26 @@ const PresentdoQuiz = () => {
         setQuizQuestions(questions);
     }, [resetKey]); // Listen for changes to the resetKey
 
-    const handleOptionSelect = (isCorrect) => {
+    const handleOptionSelect = (isCorrect, questionIndex) => {
         if (isCorrect) {
             setScore(score + 1);
         }
 
-        console.log(score + "score")
-       // setQuizPassed(true);
-        console.log(quizPassed + "quizPassed")
-        if (score === 5) {
-            // Check if the user passed the quiz
-            console.log(score + "score")
-            setQuizPassed(true);
-            console.log(quizPassed + "quizPassed")
+        if (!answeredQuestions.includes(questionIndex)) {
+            setAnsweredQuestions([...answeredQuestions, questionIndex]);
         }
 
-        if (currentQuestionIndex === quizQuestions.length - 1) {
-            // If it's the last question, finish the quiz
+        if (answeredQuestions.length === quizQuestions.length - 1) {
+            // If all questions have been answered, finish the quiz
             setQuizFinished(true);
             setShowResultsModal(true);
-        } else {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     };
 
     const resetQuiz = () => {
         setResetKey((prevKey) => prevKey + 1); // Increment the key to reset questions
         setScore(0);
-        setCurrentQuestionIndex(0);
+        setAnsweredQuestions([]);
         setQuizFinished(false);
         setShowResultsModal(false);
         setQuizPassed(false);
@@ -123,8 +116,8 @@ const PresentdoQuiz = () => {
     const navigation = useNavigation();
 
     const handleQuiz2ButtonClick = () => {
-        // Handle Quiz 3 button click here
-        // This function is called when the "Quiz 3" button is pressed
+        // Handle Quiz 2 button click here
+        // This function is called when the "Quiz 2" button is pressed
         navigation.navigate('presentdoQuiz2');
         alert('Quiz 2 button clicked');
     };
@@ -146,8 +139,8 @@ const PresentdoQuiz = () => {
                         question={q.question}
                         options={q.options}
                         correctOption={q.correctOption}
-                        onSelect={handleOptionSelect}
-                        keySuffix={resetKey} // Pass keySuffix to QuizQuestion
+                        onSelect={(isCorrect) => handleOptionSelect(isCorrect, index)}
+                        isDisabled={answeredQuestions.includes(index)} // Disable questions that have been answered
                     />
                 ))}
 
@@ -201,7 +194,9 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 10,
         borderRadius: 10,
-
+    },
+    disabledQuestion: {
+        backgroundColor: 'gray', // Change the background color for disabled questions
     },
     questionText: {
         fontSize: 18,
@@ -216,6 +211,9 @@ const styles = StyleSheet.create({
     },
     selectedOption: {
         backgroundColor: '#159957',
+    },
+    disabledOption: {
+        backgroundColor: 'gray', // Change the background color for disabled options
     },
     optionText: {
         fontSize: 16,
