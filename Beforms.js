@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
   },
   whiteText: {
     color: 'white', // Set text color to white
+    fontSize:20,
+    padding:5,
   },
 });
 

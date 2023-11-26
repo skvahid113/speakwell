@@ -1,64 +1,130 @@
-import React, { useState } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { verbData } from './verbs';
+import * as Speech from 'expo-speech';
+import { AntDesign } from '@expo/vector-icons';
+import { Languages } from './language';
+import { Picker } from '@react-native-picker/picker';
 
-const ITEMS_PER_PAGE = 5;
 
 const Day1 = ({ navigation }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [readingStarted, setReadingStarted] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [readingIndex, setReadingIndex] = useState(-1);
+  const [selectedLanguage, setSelectedLanguage] = useState(Languages.Telugu); // Default language
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const visibleVerbs = verbData.slice(startIndex, endIndex);
+  useEffect(() => {
+    if (readingStarted && readingIndex !== -1) {
+      setHighlightedIndex(readingIndex);
+      readVerbDetails(currentPage, readingIndex);
+    }
+  }, [readingStarted, currentPage, readingIndex]);
 
   const handleNext = () => {
-    if (endIndex < verbData.length) {
+    if (currentPage < verbData.length - 1) {
       setCurrentPage(currentPage + 1);
+      setHighlightedIndex(-1); // Reset highlighting when changing the page
     }
   };
 
   const handlePrevious = () => {
-    if (currentPage > 1) {
+    if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+      setHighlightedIndex(-1); // Reset highlighting when changing the page
     }
   };
 
-  const gradientColors = ['#ff9800', '#ff5722'];
+  const readVerbDetails = (index, verbIndex) => {
+    const currentVerb = verbData[index];
+    const textToRead = [
+      // `Base: ${currentVerb.base} ${currentVerb[selectedLanguage].base}`,
+      `Past Simple: ${currentVerb.pastSimple} ${currentVerb[selectedLanguage].pastSimple}`,
+      `Past Participle: ${currentVerb.pastParticiple} ${currentVerb[selectedLanguage].pastParticiple}`,
+      `Present Participle: ${currentVerb.presentParticiple} ${currentVerb[selectedLanguage].presentParticiple}`,
+      
+    ];
+
+    setReadingIndex(verbIndex);
+
+    Speech.speak(textToRead[verbIndex], {
+      language: 'en',
+      onDone: () => {
+        if (verbIndex < textToRead.length - 1) {
+          setReadingIndex(verbIndex + 1);
+        } else {
+          setReadingStarted(false);
+          setHighlightedIndex(-1);
+          setReadingIndex(-1);
+        }
+      },
+    });
+  };
+
+  const startReading = (index) => {
+    setReadingStarted(true);
+    setReadingIndex(0);
+  };
+
+  const stopReading = () => {
+    setReadingStarted(false);
+    setHighlightedIndex(-1);
+    setReadingIndex(-1);
+    Speech.stop();
+  };
+
+  const changeLanguage = (language) => {
+    setSelectedLanguage(language);
+    // Additional logic to handle language change if needed
+    // For example, fetching different verb data based on the selected language
+  };
 
   return (
-    <LinearGradient
-      colors={['#0093E9', '#80D0C7']}
-      style={{ flex: 1 }}
-    >
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Present</Text>
-          <Text style={styles.headerText}>Past Simple</Text>
-          <Text style={styles.headerText}>Past Participle</Text>
-          <Text style={styles.headerText}>Present Participle</Text>
-          <Text style={styles.headerText}>Telugu</Text>
-        </View>
-        {visibleVerbs.map((currentVerb, index) => (
-          <View key={index} style={styles.dataRow}>
-            <Text style={styles.dataText}>{currentVerb.base}</Text>
-            <Text style={styles.dataText}>{currentVerb.pastSimple}</Text>
-            <Text style={styles.dataText}>{currentVerb.pastParticiple}</Text>
-            <Text style={styles.dataText}>{currentVerb.presentParticiple}</Text>
-            <Text style={styles.dataText}>{currentVerb.telugu.base}</Text>
+    <LinearGradient colors={['#0093E9', '#80D0C7']} style={{ flex: 1 }}>
+      <TouchableOpacity onPress={readingStarted ? stopReading : () => startReading(currentPage)} style={styles.topRightButton}>
+        <Text style={styles.buttonText}>{readingStarted ? 'Stop Reading' : 'Read Now'}</Text>
+      </TouchableOpacity>
+
+      <View style={styles.languageDropdown}>
+        <Picker
+          selectedValue={selectedLanguage}
+          style={{ height: 50, width: 150 }}
+          onValueChange={(itemValue) => changeLanguage(itemValue)}
+        >
+          {Object.keys(Languages).map((language, index) => (
+            <Picker.Item key={index} label={language} value={Languages[language]} />
+          ))}
+        </Picker>
+      </View>
+
+      {currentPage !== null && (
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Base: {verbData[currentPage].base} - {verbData[currentPage][selectedLanguage].base}</Text>
+            <Text style={[styles.cardText, highlightedIndex === 0 ? styles.highlightedText : null]}>
+              Past Simple: {verbData[currentPage].pastSimple} - {verbData[currentPage][selectedLanguage].pastSimple}
+            </Text>
+            <Text style={[styles.cardText, highlightedIndex === 1 ? styles.highlightedText : null]}>
+              Past Participle: {verbData[currentPage].pastParticiple} - {verbData[currentPage][selectedLanguage].pastParticiple}
+            </Text>
+            <Text style={[styles.cardText, highlightedIndex === 2 ? styles.highlightedText : null]}>
+              Present Participle: {verbData[currentPage].presentParticiple}  {verbData[currentPage][selectedLanguage].presentParticiple}
+            </Text>
+            {/* <Text style={[styles.cardText, highlightedIndex === 3 ? styles.highlightedText : null]}>
+              {selectedLanguage}: {verbData[currentPage][selectedLanguage].base}
+            </Text> */}
           </View>
-        ))}
-      </ScrollView>
+        </ScrollView>
+      )}
+
       <View style={styles.pagination}>
-        <Button title="Previous" onPress={handlePrevious} disabled={currentPage === 1} />
-        <Text style={styles.pageText}></Text>
-        <Button
-          title="Next"
-          color={'orange'}
-          onPress={handleNext}
-          disabled={endIndex >= verbData.length}
-          style={styles.roundedButton}
-        />
+        <TouchableOpacity onPress={handlePrevious} disabled={currentPage === 0}>
+          <AntDesign name="leftcircle" size={30} color={currentPage === 0 ? 'grey' : 'black'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleNext} disabled={currentPage === verbData.length - 1}>
+          <AntDesign name="rightcircle" size={30} color={currentPage === verbData.length - 1 ? 'grey' : 'black'} />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -66,54 +132,67 @@ const Day1 = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent', // Set the background to transparent
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    width: '100%',
-
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingVertical: 40,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    paddingBottom: 5,
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 40,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  headerText: {
+  cardTitle: {
+    fontSize: 28,
     fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'center',
-    color: 'white'
+    marginBottom: 20,
   },
-  dataRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 25,
-    borderTopWidth: 2,
-    borderColor: 'gray',
-  },
-  dataText: {
-    flex: 1,
-    textAlign: 'center',
-
+  cardText: {
+    fontSize: 18,
+    marginBottom: 16,
   },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 40,
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-  pageText: {
-    fontWeight: 'bold',
-    backgroundColor: 'red'
-
+  topRightButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'orange',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    zIndex: 1,
   },
-  roundedButton: {
-    borderTopLeftRadius: 40, // Adjust the radius as needed
-    borderTopRightRadius: 40, // Adjust the radius as needed
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  languageDropdown: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    zIndex: 1,
+  },
+  highlightedText: {
+    backgroundColor: 'yellow', // Change the highlight color as needed
+    fontWeight: 'bold',
   },
 });
 
