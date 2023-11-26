@@ -3,6 +3,18 @@
 # dependencies
 node_modules/
 
+# eas build -p android --profile preview  
+# eas build -p android --profile preview
+# npm install expo@~49.0.6
+
+
+# npm install @react-navigation/native
+# npm install react-native-screens
+# npm install react-native-safe-area-context
+# npx react-native link react-native-screens
+# npx react-native link react-native-safe-area-context
+# npx expo install --fix
+
 # Expo
 .expo/
 dist/

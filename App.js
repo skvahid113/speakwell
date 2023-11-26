@@ -66,7 +66,7 @@ import dareto from './dareto';
 import ModalAuxiliaries from './ModalAuxiliaries';
 
 import CustomSidebar from './CustomSideBar';
-import signup from './signup';
+// import signup from './signup';
 import presentdoQuiz from './presentdoQuiz';
 import TakeNow from './TakeNow';
 import presentdoQuiz2 from './presentdoQuiz2';
@@ -122,11 +122,7 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
-          <Drawer.Screen
-            name="signup"
-            component={signup}
-            options={{ headerShown: false }}
-          />
+          
 
           <Drawer.Screen
             name="TakeNow"

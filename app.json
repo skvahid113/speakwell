@@ -15,22 +15,29 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Q.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.quicklingo"
+      "package": "com.quicklingo",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/Q.png"
     },
     "extra": {
       "eas": {
         "projectId": "3a4b1eec-9a66-4e30-98ee-94ca92e7eae6"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3a4b1eec-9a66-4e30-98ee-94ca92e7eae6"
     }
   }
 }
