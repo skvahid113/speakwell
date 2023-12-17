@@ -1,77 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPhoneNumber } from 'firebase/auth';
-
-
-const firebaseConfig = {
-    apiKey: 'AIzaSyAEOIBzzB6f2rHZpIZ2jzofQQ5Zv2UlPPY', // Your API Key
-    authDomain: 'quicklingo-48466.firebaseapp.com', // Your Firebase Authentication Domain
-    projectId: 'quicklingo-48466', // Your Firebase Project ID
-    storageBucket: 'quicklingo-48466.appspot.com', // Your Firebase Storage Bucket
-    messagingSenderId: '26580527177', // Your Firebase Messaging Sender ID
-    appId: '1:26580527177:android:15cf8d9592b9da535eb798', // Your Firebase App ID
-};
-
-// Initialize Firebase with your configuration
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app); // Initialize the Auth instance
-
 const SignUp = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const navigation = useNavigation();
-  const [typedText, setTypedText] = useState('');
-  const textToType = 'Sign Up';
-  const typingSpeed = 200; // Adjust typing speed in milliseconds
-  let currentIndex = 0;
+  const [emojiScale] = useState(new Animated.Value(1));
+  const [phoneEntered, setPhoneEntered] = useState(false);
 
   useEffect(() => {
-    const typingInterval = setInterval(() => {
-      if (currentIndex < textToType.length) {
-        setTypedText((prevText) => prevText + textToType[currentIndex]);
-        currentIndex += 1;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, typingSpeed);
-
-    return () => {
-      clearInterval(typingInterval);
-    };
-  }, []);
-
-  const handleSignUp = async () => {
-    try {
-        console.log('before:', auth,`+91${phoneNumber}`);
-        // Request a verification code to be sent to the user's phone number
-        const confirmation = await signInWithPhoneNumber(auth, `+91${phoneNumber}`);
-        console.error('after:', confirmation);
-        // const verificationId = confirmation.verificationId;
-
-        // // Navigate to the OTP screen and pass the verification ID and phone number as parameters
-        // navigation.navigate('OTPScreen', { verificationId, phoneNumber });
-    } catch (error) {
-        console.error('Error requesting verification code:', error.message);
+    let interval;
+    if (!phoneEntered) {
+      interval = setInterval(() => {
+        Animated.sequence([
+          Animated.timing(emojiScale, {
+            toValue: 1.5,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(emojiScale, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }, 1000); // Change blinking interval as needed
+    } else {
+      clearInterval(interval);
+      Animated.timing(emojiScale, {
+        toValue: 2,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
     }
-};
 
+    return () => clearInterval(interval);
+  }, [phoneEntered, emojiScale]);
 
   const isPhoneNumberValid = /^\d{10}$/.test(phoneNumber);
 
+  const handleSignUp = async () => {
+    if (isPhoneNumberValid) {
+      // If phone number is valid, proceed with sign up
+      try {
+        // Perform sign-up actions here
+        // Navigate to the next screen or perform necessary operations
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    }
+  };
+
   return (
     <LinearGradient
-      colors={['#870000', '#3533cd']}
+      colors={['#F4D03F', '#16A085']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={styles.heading}>{typedText}</Text>
+        <Animated.Text style={[
+          styles.heading,
+          {
+            transform: [{ scale: emojiScale }],
+            color: phoneEntered ? '#006400' : '#FF0000', // Dark Green for thumbs up, Red for down arrow
+          }
+        ]}>
+          {phoneEntered ? '👍🏻' : '👇🏾'}
+        </Animated.Text>
         <View style={styles.inputContainer}>
           <View style={styles.prefixBox}>
             <Text style={styles.prefixText}>+91</Text>
@@ -80,24 +78,26 @@ const SignUp = () => {
             style={styles.input}
             placeholder="Mobile Phone Number"
             keyboardType="numeric"
-            onChangeText={(text) => setPhoneNumber(text)}
+            onChangeText={(text) => {
+              setPhoneNumber(text);
+              setPhoneEntered(text.length === 10); // Set phoneEntered based on phone number length
+            }}
             maxLength={10}
-            placeholderTextColor="white"
+            placeholderTextColor="#bdc3c7"
           />
         </View>
-        {isPhoneNumberValid && (
-          <TouchableOpacity
-            style={[styles.button, isPhoneNumberValid ? styles.activeButton : styles.inactiveButton]}
-            onPress={handleSignUp}
-            disabled={!isPhoneNumberValid}
-          >
-            <FontAwesome name="arrow-right" size={24} color="white" />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[styles.button, isPhoneNumberValid ? styles.activeButton : styles.inactiveButton]}
+          onPress={handleSignUp}
+          disabled={!isPhoneNumberValid}
+        >
+          <FontAwesome name="arrow-right" size={24} color="white" />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -113,57 +113,50 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   heading: {
-    fontSize: 24,
+    fontSize: 32,
     color: 'white',
-    marginBottom: 20,
+    marginBottom: 30,
+    fontWeight: 'bold',
+    letterSpacing: 1,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 5,
-    marginBottom: 20,
+    borderRadius: 10,
+    marginBottom: 30,
   },
   prefixBox: {
-    backgroundColor: '#155799',
-    width: 40,
-    height: 70,
+    backgroundColor: '#f5af19',
+    width: 60,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   prefixText: {
     color: 'white',
     fontSize: 18,
+    fontWeight: 'bold',
   },
   input: {
     flex: 1,
-    height: 70,
+    height: 60,
     color: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#3c3b3f',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    marginLeft: 0,
-    fontSize: 20,
-  },
-  button: {
-    backgroundColor: '#3c3b3f',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
+    paddingHorizontal: 15,
+    backgroundColor: 'transparent',
     fontSize: 18,
   },
+  button: {
+    backgroundColor: '#f5af19',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
   activeButton: {
-    backgroundColor: '#20002c',
+    backgroundColor: '#f15e75',
   },
   inactiveButton: {
     backgroundColor: 'gray',

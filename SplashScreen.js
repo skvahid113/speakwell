@@ -71,9 +71,12 @@ const SplashScreen = () => {
     startTypingAnimation();
   }, []);
 
+//   background-color: #F4D03F;
+// background-image: linear-gradient(132deg, #F4D03F 0%, #16A085 100%);
+
   return (
     <LinearGradient
-      colors={['#870000', '#3533cd']}
+      colors={['#16A085', '#16A085']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={styles.container}

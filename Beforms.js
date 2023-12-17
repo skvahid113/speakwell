@@ -1,10 +1,17 @@
 // Beforms.js
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import useBackButtonHandler from './back';
 
 const Beforms = () => {
+  const navigation = useNavigation();
+
+  useBackButtonHandler(() => {
+    navigation.goBack(); // Navigate to the previous screen using React Navigation
+  });
   return (
     <LinearGradient
       colors={['#0093E9', '#80D0C7']}

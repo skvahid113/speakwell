@@ -2,8 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import useBackButtonHandler from './back';
 
 const Day5 = ({ navigation }) => {
+
+
+  useBackButtonHandler(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack(); // Navigate to the previous screen if available
+    } else {
+      BackHandler.exitApp(); // If no previous screen, exit the app
+    }
+  });
   const forms = [
     { name: 'Be Forms', screen: 'Beforms' },
     { name: 'Present Be Forms', screen: 'PresentBeforms' },

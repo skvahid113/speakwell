@@ -1,8 +1,15 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import useBackButtonHandler from './back';
 
 const FutureBeforms = () => {
+  const navigation = useNavigation();
+
+  useBackButtonHandler(() => {
+    navigation.goBack(); // Navigate to the previous screen using React Navigation
+  });
   return (
     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.container}>
       <View>
