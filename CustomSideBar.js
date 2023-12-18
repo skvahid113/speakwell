@@ -4,7 +4,8 @@ import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faBook, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faBook, faCalendar, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+
 
 library.add(faHome, faBook, faCalendar);
 
@@ -28,6 +29,19 @@ const CustomSidebar = (props) => {
     // Add more menu items here...
   ];
 
+  const handleNavigation = (label) => {
+
+    props.navigation.navigate(label); // Navigate to other screens based on the label
+
+  };
+
+  const handleNavigationLogout = () => {
+
+    props.updateOTPVerification(false)
+    props.navigation.navigate('SplashScreen'); // Navigate to signup screen after logout
+
+  };
+
   return (
     <DrawerContentScrollView {...props}>
       <LinearGradient
@@ -41,15 +55,21 @@ const CustomSidebar = (props) => {
             <TouchableOpacity
               key={index}
               style={styles.menuItem}
-              onPress={() => {
-                props.navigation.navigate(item.label);
-              }}
+              onPress={() => handleNavigation(item.label)}
             >
               <FontAwesomeIcon icon={item.icon} style={styles.icon} />
               <Text style={styles.menuItemText}>{item.alias}</Text>
             </TouchableOpacity>
           ))}
         </View>
+
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => handleNavigationLogout('Logout')}
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} style={styles.logoutIcon} />
+
+        </TouchableOpacity>
       </LinearGradient>
     </DrawerContentScrollView>
   );
@@ -78,6 +98,18 @@ const styles = StyleSheet.create({
   icon: {
     color: 'yellow',
     fontSize: 18, // Adjust as needed
+  },
+  logoutButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  logoutIcon: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 

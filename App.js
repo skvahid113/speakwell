@@ -124,6 +124,8 @@ const App = () => {
               component={SplashScreen}
               options={{ headerShown: false }}
             />
+
+
             <Stack.Screen
               name="OTPScreen"
               options={{ title: 'OTPScreen' }}
@@ -144,7 +146,9 @@ const App = () => {
         ) : (
 
           <Drawer.Navigator
-            drawerContent={(props) => <CustomSidebar {...props} />
+            drawerContent={(props) => <CustomSidebar
+              updateOTPVerification={updateOTPVerification}
+              {...props} />
 
             } // Use CustomSidebar as the contentComponent
           >
@@ -646,6 +650,12 @@ const App = () => {
               name="signup"
               component={signup}
               options={{ title: 'Signup' }}
+            />
+
+            <Drawer.Screen
+              name="SplashScreen"
+              component={SplashScreen}
+              options={{ title: 'SplashScreen' }}
             />
 
             <Drawer.Screen
