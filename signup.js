@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { FirebaseRecaptcha, FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
-import { getAuth, PhoneAuthProvider,signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
+import { getAuth, PhoneAuthProvider, signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
 
 // Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
 import { auth as firebaseAuthApp } from './firebase';
@@ -92,7 +92,7 @@ const SignUp = () => {
 
   return (
     <LinearGradient
-      colors={['#F4D03F', '#16A085']}
+      colors={['#2A414C', '#C0B097']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={styles.container}
@@ -132,10 +132,10 @@ const SignUp = () => {
         </TouchableOpacity>
 
         <FirebaseRecaptchaVerifierModal // Use FirebaseRecaptchaVerifierModal for verification
-        ref={(ref) => (recaptchaVerifier.current = ref)}
-        firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
-        attemptInvisibleVerification={true} // Adjust according to your requirement
-      />
+          ref={(ref) => (recaptchaVerifier.current = ref)}
+          firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
+          attemptInvisibleVerification={true} // Adjust according to your requirement
+        />
       </View>
     </LinearGradient>
   );
@@ -166,12 +166,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#1C3132',
     borderRadius: 10,
     marginBottom: 30,
   },
   prefixBox: {
-    backgroundColor: '#f5af19',
+    backgroundColor: '#223F3E',
     width: 60,
     height: 60,
     justifyContent: 'center',

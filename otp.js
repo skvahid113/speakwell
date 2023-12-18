@@ -25,18 +25,35 @@ const OTPScreen = ({ route, navigation, updateOTPVerification }) => {
   }, []);
 
   const handleOTPChange = (index, value) => {
-    // Update the OTP array with new value at the given index
-    const newOTP = [...otp];
-    newOTP[index] = value;
-    setOTP(newOTP);
-
-    // Focus next TextInput or blur current TextInput on OTP input
-    if (value && index < otp.length - 1) {
-      otpTextInput.current[index + 1].focus();
-    } else if (!value && index > 0) {
-      otpTextInput.current[index - 1].focus();
+    if (value === '') {
+      // If value is empty (backspace/delete), remove the current digit
+      const newOTP = [...otp];
+      newOTP[index] = ''; // Clear the digit at the specified index
+      setOTP(newOTP);
+  
+      // Move focus to the previous OTP input
+      if (index > 0) {
+        otpTextInput.current[index - 1].focus();
+        // Clear the previous box if the current box is empty
+        if (newOTP[index - 1] === '') {
+          handleOTPChange(index - 1, ''); // Recursively clear previous box
+        }
+      }
+    } else if (/^\d+$/.test(value) && index < otp.length) {
+      // Update the OTP array with new value at the given index if it's a digit
+      const newOTP = [...otp];
+      newOTP[index] = value[value.length - 1]; // Take the last digit if multiple are entered
+      setOTP(newOTP);
+  
+      // Move focus to the next TextInput if not at the last index
+      if (index < otp.length - 1) {
+        otpTextInput.current[index + 1].focus();
+      }
     }
   };
+  
+  
+  
 
   const handleVerifyOTP = () => {
     try {
@@ -144,7 +161,7 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     width: 40,
-    height: 40,
+    height: 80,
     borderWidth: 1,
     borderColor: '#f5af19', // Custom color for OTP input border
     borderRadius: 5,
