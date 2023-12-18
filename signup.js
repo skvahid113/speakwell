@@ -1,14 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { FirebaseRecaptcha, FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+
+import { getAuth, PhoneAuthProvider,signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
+
+// Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
+import { auth as firebaseAuthApp } from './firebase';
+import { RecaptchaVerifier } from 'expo-firebase-recaptcha';
+
 
 const SignUp = () => {
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const navigation = useNavigation();
   const [emojiScale] = useState(new Animated.Value(1));
   const [phoneEntered, setPhoneEntered] = useState(false);
+  const recaptchaVerifier = React.useRef(null);
+  const [verificationId, setVerificationId] = useState('');
+  const [code, setCode] = useState('');
+
+  const initializeRecaptcha = () => {
+    recaptchaVerifier.current = new RecaptchaVerifier(yourRefOrElement, {
+      size: 'invisible', // or 'normal'
+      // Other options for reCAPTCHA initialization
+    });
+  };
+
+  const handleSendVerificationCode = async () => {
+    if (phoneNumber.length === 10) {
+      try {
+        const provider = new PhoneAuthProvider(firebaseAuthApp); // Use PhoneAuthProvider from the initialized Firebase app
+        const verificationId = await provider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current);
+        setVerificationId(verificationId);
+        console.error('verificationId:', verificationId);
+        navigation.navigate('OTPScreen', { verificationId });
+        // navigation.navigate('OTPScreen', 123456);
+      } catch (error) {
+        console.error('Error sending verification code:', error);
+        // Handle error here
+      }
+    } else {
+      Alert.alert('Invalid phone number', 'Please enter a valid 10-digit phone number');
+    }
+  };
 
   useEffect(() => {
     let interval;
@@ -88,11 +125,17 @@ const SignUp = () => {
         </View>
         <TouchableOpacity
           style={[styles.button, isPhoneNumberValid ? styles.activeButton : styles.inactiveButton]}
-          onPress={handleSignUp}
+          onPress={handleSendVerificationCode}
           disabled={!isPhoneNumberValid}
         >
           <FontAwesome name="arrow-right" size={24} color="white" />
         </TouchableOpacity>
+
+        <FirebaseRecaptchaVerifierModal // Use FirebaseRecaptchaVerifierModal for verification
+        ref={(ref) => (recaptchaVerifier.current = ref)}
+        firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
+        attemptInvisibleVerification={true} // Adjust according to your requirement
+      />
       </View>
     </LinearGradient>
   );

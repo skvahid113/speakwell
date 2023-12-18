@@ -67,6 +67,7 @@ import ModalAuxiliaries from './ModalAuxiliaries';
 
 import CustomSidebar from './CustomSideBar';
 import signup from './signup';
+import OTPScreen from './otp';
 import presentdoQuiz from './presentdoQuiz';
 import TakeNow from './TakeNow';
 import presentdoQuiz2 from './presentdoQuiz2';
@@ -618,6 +619,12 @@ const App = () => {
             name="signup"
             component={signup}
             options={{ title: 'Signup' }}
+          />
+
+<Drawer.Screen
+            name="OTPScreen"
+            component={OTPScreen}
+            options={{ title: 'OTPScreen' }}
           />
 
         </Drawer.Navigator>
