@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { FirebaseRecaptcha, FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
-import { getAuth, PhoneAuthProvider, signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
+import { getAuth, PhoneAuthProvider,signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
 
 // Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
 import { auth as firebaseAuthApp } from './firebase';
@@ -132,10 +132,10 @@ const SignUp = () => {
         </TouchableOpacity>
 
         <FirebaseRecaptchaVerifierModal // Use FirebaseRecaptchaVerifierModal for verification
-          ref={(ref) => (recaptchaVerifier.current = ref)}
-          firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
-          attemptInvisibleVerification={true} // Adjust according to your requirement
-        />
+        ref={(ref) => (recaptchaVerifier.current = ref)}
+        firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
+        attemptInvisibleVerification={true} // Adjust according to your requirement
+      />
       </View>
     </LinearGradient>
   );
