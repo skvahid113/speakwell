@@ -107,17 +107,7 @@ const SplashScreen = () => {
                 end={{ x: 1, y: 1 }}
                 style={styles.button}
               >
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleLoginPress}>
-              <LinearGradient
-                colors={['#f9d423', '#96c93d']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>Sign in</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>

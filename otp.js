@@ -1,12 +1,28 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { getAuth, PhoneAuthProvider, signInWithPhoneNumber } from 'firebase/auth';
-import { auth as firebaseAuthApp } from './firebase';
+import { getAuth, PhoneAuthProvider, signInWithPhoneNumber, signInWithCredential } from 'firebase/auth';
 
-const OTPScreen = ({ route, navigation }) => {
+// Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
+import { auth as firebaseAuthApp } from './firebase';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const OTPScreen = ({ route, navigation, updateOTPVerification }) => {
   const { verificationId } = route.params;
   const [otp, setOTP] = useState(['', '', '', '', '', '']); // Array to hold OTP digits
   const otpTextInput = useRef([]); // Refs for OTP TextInput elements
+  
+
+
+  // Function to reset OTP inputs when the component mounts
+  useEffect(() => {
+    const resetOTPInputs = () => {
+      setOTP(['', '', '', '', '', '']); // Clear OTP input values
+      if (otpTextInput.current[0]) {
+        otpTextInput.current[0].focus(); // Focus on the first OTP input field
+      }
+    };
+    resetOTPInputs();
+  }, []);
 
   const handleOTPChange = (index, value) => {
     // Update the OTP array with new value at the given index
@@ -40,17 +56,24 @@ const OTPScreen = ({ route, navigation }) => {
   const handleVerifyOTPV1 = async () => {
     try {
       const enteredOTP = otp.join('');
-      const credential = signInWithPhoneNumber(firebaseAuthApp, verificationId, enteredOTP);
-      // If successful, proceed with the user authentication
-      // ...
-      console.log('verified:', credential);
+      const credential = PhoneAuthProvider.credential(
+        verificationId,
+        enteredOTP
+      );
+      console.log('credential:', credential);
+      const userCredential = await signInWithCredential(firebaseAuthApp, credential);
+      updateOTPVerification(true);
+      // If successful, navigate to the desired screen
+      console.log('User authenticated:', userCredential.user);
       navigation.navigate('HomeScreen');
     } catch (error) {
       // Handle verification failure
-      navigation.navigate('signup');
+      Alert.alert('Error', 'Invalid OTP. Please try again.');
       console.error('Error verifying OTP:', error);
+      navigation.navigate('signup');
     }
   };
+
 
   const simulateOTPValidation = () => {
     // Simulate a delay to mimic an API call for OTP validation
@@ -71,30 +94,38 @@ const OTPScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Enter OTP</Text>
-      <View style={styles.otpContainer}>
-        {otp.map((value, index) => (
-          <TextInput
-            key={index}
-            style={styles.otpInput}
-            value={value}
-            onChangeText={(text) => handleOTPChange(index, text)}
-            keyboardType="numeric"
-            maxLength={1}
-            ref={(ref) => (otpTextInput.current[index] = ref)}
-          />
-        ))}
+    <LinearGradient
+      colors={['#000', '#333']} // Black gradient background
+      style={styles.container}
+    >
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Enter OTP</Text>
+        <View style={styles.otpContainer}>
+          {otp.map((value, index) => (
+            <TextInput
+              key={index}
+              style={styles.otpInput}
+              value={value}
+              onChangeText={(text) => handleOTPChange(index, text)}
+              keyboardType="numeric"
+              maxLength={1}
+              ref={(ref) => (otpTextInput.current[index] = ref)}
+            />
+          ))}
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleVerifyOTPV1}>
+          <Text style={styles.buttonText}>Verify OTP</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleVerifyOTPV1}>
-        <Text style={styles.buttonText}>Verify OTP</Text>
-      </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  innerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -103,6 +134,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
+    color: '#fff', // Text color white
   },
   otpContainer: {
     flexDirection: 'row',
@@ -114,11 +146,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#f5af19', // Custom color for OTP input border
     borderRadius: 5,
     marginHorizontal: 5,
     textAlign: 'center',
     fontSize: 18,
+    color: '#fff', // Text color white
   },
   button: {
     backgroundColor: '#f5af19',
@@ -129,6 +162,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
