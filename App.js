@@ -66,11 +66,11 @@ import dareto from './dareto';
 import ModalAuxiliaries from './ModalAuxiliaries';
 
 import CustomSidebar from './CustomSideBar';
-import signup from './signup';
-import OTPScreen from './otp';
+import Signup from './signup';
 import presentdoQuiz from './presentdoQuiz';
 import TakeNow from './TakeNow';
 import presentdoQuiz2 from './presentdoQuiz2';
+import { auth } from './firebase';
 
 
 
@@ -87,51 +87,46 @@ const ScreenWithGradientBackground = ({ children }) => (
 );
 
 const App = () => {
-  const [otpVerified, setOTPVerified] = useState(false);
-  const updateOTPVerification = (status) => {
-    setOTPVerified(status);
+  const [verified, setVerified] = useState(false);
+
+  const handleLogout = () => {
+    console.log('logout use effect')
+    setVerified(false);
+    // You might have additional logic for signing out the user if needed
   };
+
+  const updateVerificationStatus = (status) => {
+    setVerified(status);
+  };
+
 
   return (
     <NavigationContainer>
-
-      {/* <LinearGradient
-        colors={['#4c669f', '#3b5998', '#192f6a']}
-        style={{ flex: 1 }}
-      > */}
       <ScreenWithGradientBackground>
 
-        {!otpVerified ? (
+        {!verified ? (
           <Stack.Navigator initialRouteName="Splash">
             <Stack.Screen
               name="Splash"
               component={SplashScreen}
               options={{ headerShown: false }}
             />
-
-
-            <Stack.Screen
-              name="OTPScreen"
-              options={{ title: 'OTPScreen' }}
-            >
-              {(props) => (
-                <OTPScreen
-                  {...props}
-                  updateOTPVerification={updateOTPVerification}
-                />
-              )}
-            </Stack.Screen>
             <Stack.Screen
               name="signup"
-              component={signup}
+              component={(props) => (
+                <Signup {...props} updateVerificationStatus={updateVerificationStatus} />
+              )}
               options={{ title: 'Signup' }}
             />
+
           </Stack.Navigator>
+
+
         ) : (
 
           <Drawer.Navigator
             drawerContent={(props) => <CustomSidebar
-              updateOTPVerification={updateOTPVerification}
+              handleLogout={handleLogout}
               {...props} />
 
             } // Use CustomSidebar as the contentComponent
@@ -180,13 +175,6 @@ const App = () => {
               component={SideBar}
               options={{
                 title: 'My Learnings',
-                // drawerIcon: ({ focused, size }) => (
-                //   <MaterialIcons
-                //     name={focused ? 'menu' : 'menu'}
-                //     size={size}
-                //     color={focused ? 'blue' : 'black'}
-                //   />
-                // ),
               }}
             />
             <Drawer.Screen
@@ -630,9 +618,11 @@ const App = () => {
               options={{ title: 'Dare To' }}
             />
 
-            <Drawer.Screen
+            <Stack.Screen
               name="signup"
-              component={signup}
+              component={(props) => (
+                <Signup {...props} updateVerificationStatus={updateVerificationStatus} />
+              )}
               options={{ title: 'Signup' }}
             />
 
@@ -641,18 +631,6 @@ const App = () => {
               component={SplashScreen}
               options={{ title: 'SplashScreen' }}
             />
-
-            <Drawer.Screen
-              name="OTPScreen"
-              options={{ title: 'OTPScreen' }}
-            >
-              {(props) => (
-                <OTPScreen
-                  {...props}
-                  updateOTPVerification={updateOTPVerification}
-                />
-              )}
-            </Drawer.Screen>
 
           </Drawer.Navigator>)}
         {/* </LinearGradient> */}

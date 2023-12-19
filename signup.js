@@ -1,94 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Modal,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { FirebaseRecaptcha, FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
+import { auth } from './firebase';
 
-import { getAuth, PhoneAuthProvider,signInWithPhoneNumber } from 'firebase/auth'; // Import specific Firebase Auth functionalities
+const SignUp = ({ navigation, updateVerificationStatus }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [verificationLabel, setVerificationLabel] = useState('Click below button after email verified');
+  // const navigation = useNavigation();
 
-// Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
-import { auth as firebaseAuthApp } from './firebase';
-import { RecaptchaVerifier } from 'expo-firebase-recaptcha';
-
-
-const SignUp = () => {
-
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const navigation = useNavigation();
-  const [emojiScale] = useState(new Animated.Value(1));
-  const [phoneEntered, setPhoneEntered] = useState(false);
-  const recaptchaVerifier = React.useRef(null);
-  const [verificationId, setVerificationId] = useState('');
-  const [code, setCode] = useState('');
-
-  const initializeRecaptcha = () => {
-    recaptchaVerifier.current = new RecaptchaVerifier(yourRefOrElement, {
-      size: 'invisible', // or 'normal'
-      // Other options for reCAPTCHA initialization
-    });
+  const handleSignUp = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log('User signed up:', userCredential.user);
+      await sendEmailVerification(auth.currentUser);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error signing up:', error.message);
+      Alert.alert('Error', error.message);
+    }
   };
 
-  const handleSendVerificationCode = async () => {
-    if (phoneNumber.length === 10) {
-      try {
-        const provider = new PhoneAuthProvider(firebaseAuthApp); // Use PhoneAuthProvider from the initialized Firebase app
-        const verificationId = await provider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current);
-        setVerificationId(verificationId);
-        console.error('verificationId:', verificationId);
-        navigation.navigate('OTPScreen', { verificationId });
-        // navigation.navigate('OTPScreen', 123456);
-      } catch (error) {
-        console.error('Error sending verification code:', error);
-        // Handle error here
+  const handleVerification = async () => {
+    try {
+      await auth.currentUser.reload();
+      if (auth.currentUser.emailVerified) {
+        setShowModal(false);
+        updateVerificationStatus(true)
+        navigation.navigate('HomeScreen');
+      } else {
+        setVerificationLabel('Email is not verified');
+        setTimeout(() => {
+          setVerificationLabel('Click below button after email verified');
+        }, 3000);
       }
-    } else {
-      Alert.alert('Invalid phone number', 'Please enter a valid 10-digit phone number');
+    } catch (error) {
+      console.error('Error verifying email:', error.message);
+      Alert.alert('Error', 'Failed to verify email.');
     }
   };
 
   useEffect(() => {
-    let interval;
-    if (!phoneEntered) {
-      interval = setInterval(() => {
-        Animated.sequence([
-          Animated.timing(emojiScale, {
-            toValue: 1.5,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(emojiScale, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      }, 1000); // Change blinking interval as needed
-    } else {
-      clearInterval(interval);
-      Animated.timing(emojiScale, {
-        toValue: 2,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start();
-    }
-
-    return () => clearInterval(interval);
-  }, [phoneEntered, emojiScale]);
-
-  const isPhoneNumberValid = /^\d{10}$/.test(phoneNumber);
-
-  const handleSignUp = async () => {
-    if (isPhoneNumberValid) {
-      // If phone number is valid, proceed with sign up
-      try {
-        // Perform sign-up actions here
-        // Navigate to the next screen or perform necessary operations
-      } catch (error) {
-        console.error('Error:', error.message);
+    console.log('Setting up Auth State Change Listener');
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.emailVerified) {
+        console.log('User is logged in and email is verified. Redirecting to HomeScreen');
+        navigation.navigate('HomeScreen');
+        unsubscribe(); // Unsubscribe when email is verified
+      } else {
+        console.log('User is either not logged in or email is not verified');
       }
-    }
-  };
+    });
+  }, [navigation]);
+
+  const isEmailValid =
+    /\S+@\S+\.\S+/.test(email) && email.toLowerCase().endsWith('@gmail.com');
+  const isPasswordValid = password.length >= 6;
 
   return (
     <LinearGradient
@@ -98,49 +85,70 @@ const SignUp = () => {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Animated.Text style={[
-          styles.heading,
-          {
-            transform: [{ scale: emojiScale }],
-            color: phoneEntered ? '#006400' : '#FF0000', // Dark Green for thumbs up, Red for down arrow
-          }
-        ]}>
-          {phoneEntered ? '👍🏻' : '👇🏾'}
-        </Animated.Text>
         <View style={styles.inputContainer}>
-          <View style={styles.prefixBox}>
-            <Text style={styles.prefixText}>+91</Text>
-          </View>
           <TextInput
             style={styles.input}
-            placeholder="Mobile Phone Number"
-            keyboardType="numeric"
-            onChangeText={(text) => {
-              setPhoneNumber(text);
-              setPhoneEntered(text.length === 10); // Set phoneEntered based on phone number length
-            }}
-            maxLength={10}
+            placeholder="Email"
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            placeholderTextColor="#bdc3c7"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={true}
             placeholderTextColor="#bdc3c7"
           />
         </View>
         <TouchableOpacity
-          style={[styles.button, isPhoneNumberValid ? styles.activeButton : styles.inactiveButton]}
-          onPress={handleSendVerificationCode}
-          disabled={!isPhoneNumberValid}
+          style={[
+            styles.button,
+            isEmailValid && isPasswordValid
+              ? styles.activeButton
+              : styles.inactiveButton,
+          ]}
+          onPress={handleSignUp}
+          disabled={!isEmailValid || !isPasswordValid}
         >
           <FontAwesome name="arrow-right" size={24} color="white" />
         </TouchableOpacity>
 
-        <FirebaseRecaptchaVerifierModal // Use FirebaseRecaptchaVerifierModal for verification
-        ref={(ref) => (recaptchaVerifier.current = ref)}
-        firebaseConfig={firebaseAuthApp.app.options} // Pass Firebase configuration
-        attemptInvisibleVerification={true} // Adjust according to your requirement
-      />
+        {/* Modal for success and verification */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showModal}
+          onRequestClose={() => setShowModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            {!verified ? (
+              <View style={styles.modalContent}>
+                <Text style={styles.modalText}>
+                  Verify your email to continue
+                </Text>
+                <TouchableOpacity
+                  onPress={handleVerification}
+                  style={styles.verifyButton}
+                >
+                  <Text style={styles.verifyText}>{verificationLabel}</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.modalContent}>
+                <FontAwesome name="check-circle" size={60} color="green" />
+                <Text style={styles.modalText}>Email Verified!</Text>
+              </View>
+            )}
+          </View>
+        </Modal>
       </View>
     </LinearGradient>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -155,13 +163,6 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
   },
-  heading: {
-    fontSize: 32,
-    color: 'white',
-    marginBottom: 30,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -169,20 +170,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C3132',
     borderRadius: 10,
     marginBottom: 30,
-  },
-  prefixBox: {
-    backgroundColor: '#223F3E',
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-  },
-  prefixText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   input: {
     flex: 1,
@@ -203,6 +190,31 @@ const styles = StyleSheet.create({
   },
   inactiveButton: {
     backgroundColor: 'gray',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  verifyButton: {
+    backgroundColor: '#f5af19',
+    padding: 10,
+    borderRadius: 5,
+  },
+  verifyText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

@@ -36,8 +36,7 @@ const CustomSidebar = (props) => {
   };
 
   const handleNavigationLogout = () => {
-
-    props.updateOTPVerification(false)
+    props.handleLogout()
     props.navigation.navigate('SplashScreen'); // Navigate to signup screen after logout
 
   };

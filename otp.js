@@ -1,137 +1,48 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { getAuth, PhoneAuthProvider, signInWithPhoneNumber, signInWithCredential } from 'firebase/auth';
-
-// Assuming you've initialized Firebase in another file (e.g., firebase.js) and exported the initialized app
-import { auth as firebaseAuthApp } from './firebase';
+import React, { useState } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { auth } from './firebase';
 
-const OTPScreen = ({ route, navigation, updateOTPVerification }) => {
-  const { verificationId } = route.params;
-  const [otp, setOTP] = useState(['', '', '', '', '', '']); // Array to hold OTP digits
-  const otpTextInput = useRef([]); // Refs for OTP TextInput elements
-  
+const OTPScreen = () => {
+  const [verificationCode, setVerificationCode] = useState('');
+  const navigation = useNavigation();
 
-
-  // Function to reset OTP inputs when the component mounts
-  useEffect(() => {
-    const resetOTPInputs = () => {
-      setOTP(['', '', '', '', '', '']); // Clear OTP input values
-      if (otpTextInput.current[0]) {
-        otpTextInput.current[0].focus(); // Focus on the first OTP input field
-      }
-    };
-    resetOTPInputs();
-  }, []);
-
-  const handleOTPChange = (index, value) => {
-    if (value === '') {
-      // If value is empty (backspace/delete), remove the current digit
-      const newOTP = [...otp];
-      newOTP[index] = ''; // Clear the digit at the specified index
-      setOTP(newOTP);
-  
-      // Move focus to the previous OTP input
-      if (index > 0) {
-        otpTextInput.current[index - 1].focus();
-        // Clear the previous box if the current box is empty
-        if (newOTP[index - 1] === '') {
-          handleOTPChange(index - 1, ''); // Recursively clear previous box
-        }
-      }
-    } else if (/^\d+$/.test(value) && index < otp.length) {
-      // Update the OTP array with new value at the given index if it's a digit
-      const newOTP = [...otp];
-      newOTP[index] = value[value.length - 1]; // Take the last digit if multiple are entered
-      setOTP(newOTP);
-  
-      // Move focus to the next TextInput if not at the last index
-      if (index < otp.length - 1) {
-        otpTextInput.current[index + 1].focus();
-      }
-    }
-  };
-  
-  
-  
-
-  const handleVerifyOTP = () => {
+  const handleVerifyCode = async () => {
     try {
-      // Perform OTP validation here using the entered OTP (otp.join(''))
-      // For demonstration, let's simulate a delay to mimic an API call for validation
-      simulateOTPValidation(); // Simulating OTP validation (replace this with your actual validation logic)
+      const credential = auth.PhoneAuthProvider.credential(verificationId, verificationCode);
+      await auth().signInWithCredential(credential);
 
-      // If validation succeeds, navigate to the next screen
-      // Replace 'HomeScreen' with your screen name after successful validation
-    } catch (error) {
-      Alert.alert('Error', 'Invalid OTP. Please try again.'); // Handle validation failure
-      console.error('Error validating OTP:', error);
-      navigation.navigate('signup');
-    }
-  };
-
-  const handleVerifyOTPV1 = async () => {
-    try {
-      const enteredOTP = otp.join('');
-      const credential = PhoneAuthProvider.credential(
-        verificationId,
-        enteredOTP
-      );
-      console.log('credential:', credential);
-      const userCredential = await signInWithCredential(firebaseAuthApp, credential);
-      updateOTPVerification(true);
-      // If successful, navigate to the desired screen
-      console.log('User authenticated:', userCredential.user);
+      // Verification successful, navigate to the next screen
       navigation.navigate('HomeScreen');
     } catch (error) {
-      // Handle verification failure
-      Alert.alert('Error', 'Invalid OTP. Please try again.');
-      console.error('Error verifying OTP:', error);
-      navigation.navigate('signup');
+      console.error('Error verifying code:', error.message);
+      Alert.alert('Error', 'Invalid verification code. Please try again.');
+      navigation.navigate('SplashScreen');
     }
-  };
-
-
-  const simulateOTPValidation = () => {
-    // Simulate a delay to mimic an API call for OTP validation
-    setTimeout(() => {
-      // Simulated success scenario - Replace this with your actual validation logic
-      const expectedOTP = verificationId; // Replace this with the actual OTP expected for verification
-      const enteredOTP = otp.join('');
-      console.log('enteredOTP', enteredOTP);
-      if (enteredOTP === expectedOTP) {
-        // Resolve the validation if OTP matches
-        console.log('Valid OTP entered');
-        navigation.navigate('HomeScreen');
-      } else {
-        Alert.alert('Error', 'Invalid OTP. Please try again.');
-        navigation.navigate('signup');
-      }
-    }, 1500); // Simulated delay of 1.5 seconds
   };
 
   return (
     <LinearGradient
-      colors={['#000', '#333']} // Black gradient background
+      colors={['#2A414C', '#C0B097']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
       style={styles.container}
     >
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Enter OTP</Text>
-        <View style={styles.otpContainer}>
-          {otp.map((value, index) => (
-            <TextInput
-              key={index}
-              style={styles.otpInput}
-              value={value}
-              onChangeText={(text) => handleOTPChange(index, text)}
-              keyboardType="numeric"
-              maxLength={1}
-              ref={(ref) => (otpTextInput.current[index] = ref)}
-            />
-          ))}
-        </View>
-        <TouchableOpacity style={styles.button} onPress={handleVerifyOTPV1}>
-          <Text style={styles.buttonText}>Verify OTP</Text>
+      <View style={styles.content}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter verification code"
+          onChangeText={(text) => setVerificationCode(text)}
+          keyboardType="numeric"
+          placeholderTextColor="#bdc3c7"
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleVerifyCode}
+          disabled={!verificationCode}
+        >
+          <Text style={styles.buttonText}>Verify</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -141,45 +52,34 @@ const OTPScreen = ({ route, navigation, updateOTPVerification }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  innerContainer: {
-    flex: 1,
+  content: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    width: '100%',
   },
-  title: {
-    fontSize: 24,
+  input: {
+    height: 50,
+    width: '80%',
+    backgroundColor: '#1C3132',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    color: 'white',
     marginBottom: 20,
-    color: '#fff', // Text color white
-  },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  otpInput: {
-    width: 40,
-    height: 80,
-    borderWidth: 1,
-    borderColor: '#f5af19', // Custom color for OTP input border
-    borderRadius: 5,
-    marginHorizontal: 5,
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#fff', // Text color white
   },
   button: {
     backgroundColor: '#f5af19',
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 
